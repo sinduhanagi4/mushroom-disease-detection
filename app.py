@@ -29,7 +29,6 @@ st.markdown("""
         linear-gradient(135deg, #f0fdf4 0%, #ffffff 45%, #ecfdf5 100%);
 }
 
-/* Remove top spacing */
 .block-container {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -172,6 +171,21 @@ st.markdown("""
     line-height: 1.7;
 }
 
+/* LANGUAGE BUTTONS */
+div[data-testid="stRadio"] > div {
+    justify-content: center;
+    gap: 12px;
+}
+
+div[data-testid="stRadio"] label {
+    background: white;
+    border: 2px solid #10b981;
+    border-radius: 14px;
+    padding: 10px 28px;
+    font-weight: 700;
+    color: #065f46;
+}
+
 /* FOOTER */
 .footer {
     text-align: center;
@@ -183,9 +197,44 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
+# ---------------------------------------------------------
+# TOP LANGUAGE SELECTOR
+# ---------------------------------------------------------
+
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #064e3b, #059669);
+    padding: 18px 25px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 25px rgba(5,150,105,0.20);
+    text-align: center;
+">
+
+<div style="
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+">
+🌐 SELECT LANGUAGE / ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ
+</div>
+
+</div>
+""", unsafe_allow_html=True)
+
+language = st.radio(
+    "Select Language",
+    ["🇬🇧 English", "🇮🇳 ಕನ್ನಡ"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
+
+
 # ---------------------------------------------------------
 # HERO SECTION
 # ---------------------------------------------------------
+
 st.markdown("""
 <div class="hero">
 
@@ -203,9 +252,11 @@ and receive simple, farmer-friendly guidance.
 </div>
 """, unsafe_allow_html=True)
 
+
 # ---------------------------------------------------------
 # DASHBOARD
 # ---------------------------------------------------------
+
 st.markdown(
     '<div class="section-title">🌿 Smart Farming Dashboard</div>',
     unsafe_allow_html=True
@@ -261,9 +312,11 @@ with col4:
     </div>
     """, unsafe_allow_html=True)
 
+
 # ---------------------------------------------------------
 # DETECTION HIGHLIGHT
 # ---------------------------------------------------------
+
 st.markdown(
     '<div class="section-title">📸 Detect Mushroom Disease</div>',
     unsafe_allow_html=True
@@ -283,9 +336,11 @@ a predicted disease class with confidence.
 </div>
 """, unsafe_allow_html=True)
 
+
 # ---------------------------------------------------------
 # SUPPORTED DISEASES
 # ---------------------------------------------------------
+
 st.markdown(
     '<div class="section-title">🦠 Supported Mushroom Conditions</div>',
     unsafe_allow_html=True
@@ -302,18 +357,28 @@ diseases = [
 ]
 
 for col, disease in zip([d1, d2, d3, d4, d5], diseases):
+
     with col:
+
         st.markdown(f"""
         <div class="disease">
-            <div class="disease-icon">{disease[0]}</div>
+
+            <div class="disease-icon">
+                {disease[0]}
+            </div>
+
             <h4>{disease[1]}</h4>
+
             <p>{disease[2]}</p>
+
         </div>
         """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # HOW IT WORKS
 # ---------------------------------------------------------
+
 st.markdown(
     '<div class="section-title">⚡ How It Works</div>',
     unsafe_allow_html=True
@@ -329,18 +394,30 @@ steps = [
 ]
 
 for col, step in zip([s1, s2, s3, s4], steps):
+
     with col:
+
         st.markdown(f"""
         <div class="step">
-            <div class="step-number">{step[0]}</div>
-            <div style="font-size:30px; margin:12px;">{step[1]}</div>
+
+            <div class="step-number">
+                {step[0]}
+            </div>
+
+            <div style="font-size:30px; margin:12px;">
+                {step[1]}
+            </div>
+
             <b>{step[2]}</b>
+
         </div>
         """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # FARMER BENEFITS
 # ---------------------------------------------------------
+
 st.markdown("""
 <div class="farmer-box">
 
@@ -362,40 +439,22 @@ and easy-to-understand information in one place.
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# LANGUAGE
-# ---------------------------------------------------------
-st.markdown(
-    '<div class="section-title">🌐 Choose Your Language</div>',
-    unsafe_allow_html=True
-)
-
-language = st.radio(
-    "Language",
-    ["English", "ಕನ್ನಡ"],
-    horizontal=True,
-    label_visibility="collapsed"
-)
-
-if language == "ಕನ್ನಡ":
-    st.info(
-        "🍄 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರಿಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುವ "
-        "AI ಸಹಾಯಕಕ್ಕೆ ಸ್ವಾಗತ!"
-    )
-else:
-    st.info(
-        "🍄 Welcome to your AI-powered mushroom disease "
-        "detection and farmer support system!"
-    )
 
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
+
 st.markdown("""
 <div class="footer">
-    🍄 <b>Mushroom AI Assistant</b><br>
-    AI-based mushroom disease detection and farmer support<br><br>
-    ⚠️ AI predictions are for informational purposes.
-    For important crop decisions, consult an agricultural expert.
+
+🍄 <b>Mushroom AI Assistant</b><br>
+
+AI-based mushroom disease detection and farmer support
+
+<br><br>
+
+⚠️ AI predictions are for informational purposes.
+For important crop decisions, consult an agricultural expert.
+
 </div>
 """, unsafe_allow_html=True)
