@@ -20,6 +20,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 html, body, [class*="css"] {
@@ -36,7 +37,7 @@ html, body, [class*="css"] {
     max-width: 1200px;
 }
 
-/* Hero */
+/* HERO */
 .hero {
     background: linear-gradient(135deg, #064e3b, #047857, #10b981);
     padding: 42px;
@@ -72,7 +73,7 @@ html, body, [class*="css"] {
     opacity: 0.95;
 }
 
-/* Section headings */
+/* SECTION */
 .section-title {
     color: #064e3b;
     font-size: 27px;
@@ -81,7 +82,7 @@ html, body, [class*="css"] {
     margin-bottom: 15px;
 }
 
-/* Cards */
+/* DASHBOARD CARDS */
 .card {
     background: white;
     border: 1px solid #d1fae5;
@@ -108,7 +109,7 @@ html, body, [class*="css"] {
     line-height: 1.6;
 }
 
-/* Disease cards */
+/* DISEASE */
 .disease-card {
     background: white;
     border: 1px solid #d1fae5;
@@ -135,7 +136,7 @@ html, body, [class*="css"] {
     font-size: 11px;
 }
 
-/* How it works */
+/* HOW IT WORKS */
 .step-card {
     background: white;
     border: 1px solid #bbf7d0;
@@ -168,7 +169,7 @@ html, body, [class*="css"] {
     font-weight: 700;
 }
 
-/* Detection box */
+/* DETECTION */
 .detect-box {
     background: linear-gradient(135deg, #064e3b, #047857);
     padding: 30px;
@@ -187,7 +188,7 @@ html, body, [class*="css"] {
     line-height: 1.7;
 }
 
-/* Result */
+/* RESULT */
 .result-box {
     background: linear-gradient(135deg, #ecfdf5, #ffffff);
     border: 2px solid #10b981;
@@ -209,7 +210,7 @@ html, body, [class*="css"] {
     font-weight: 700;
 }
 
-/* Farmer box */
+/* FARMER */
 .farmer-box {
     background: linear-gradient(135deg, #14532d, #166534);
     color: white;
@@ -227,15 +228,17 @@ html, body, [class*="css"] {
     line-height: 1.7;
 }
 
-/* Footer */
+/* FOOTER */
 .footer {
     text-align: center;
     color: #6b7280;
     padding: 30px 10px 10px;
     font-size: 12px;
 }
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================================================
 # LANGUAGE SELECTOR
@@ -249,6 +252,7 @@ border-radius: 18px;
 text-align: center;
 margin-bottom: 10px;
 ">
+
 <div style="
 color:white;
 font-size:17px;
@@ -256,6 +260,7 @@ font-weight:700;
 ">
 🌐 SELECT LANGUAGE / ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ
 </div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -268,11 +273,13 @@ language = st.radio(
 
 is_kannada = language == "🇮🇳 ಕನ್ನಡ"
 
+
 # =========================================================
-# HERO
+# TEXT TRANSLATIONS
 # =========================================================
 
 if is_kannada:
+
     hero_badge = "🌱 ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ • ಸ್ಮಾರ್ಟ್ ಕೃಷಿ"
     hero_title = "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
     hero_subtitle = "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರ ಸಹಾಯ"
@@ -281,7 +288,73 @@ if is_kannada:
         "AI ಮಾದರಿಯು ಸಂಭವನೀಯ ರೋಗವನ್ನು ಗುರುತಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ "
         "ಮತ್ತು ಸರಳ ರೈತ ಸ್ನೇಹಿ ಮಾಹಿತಿಯನ್ನು ನೀಡುತ್ತದೆ."
     )
+
+    dashboard_title = "🌿 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
+
+    cards = [
+        (
+            "🔬",
+            "AI ರೋಗ ಪತ್ತೆ",
+            "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು AI ಮೂಲಕ ವಿಶ್ಲೇಷಿಸಿ."
+        ),
+        (
+            "🌱",
+            "ರೈತ ಮಾರ್ಗದರ್ಶನ",
+            "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯದ ಬಗ್ಗೆ ಸರಳ ಮತ್ತು ಉಪಯುಕ್ತ ಮಾಹಿತಿ ಪಡೆಯಿರಿ."
+        ),
+        (
+            "💬",
+            "AI ರೈತ ಸಹಾಯಕ",
+            "ಮಶ್ರೂಮ್ ರೋಗಗಳು ಮತ್ತು ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ."
+        ),
+        (
+            "📊",
+            "ರೋಗ ಮಾಹಿತಿ",
+            "ಪತ್ತೆಯಾದ ರೋಗದ ಬಗ್ಗೆ ಸುಲಭವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ."
+        )
+    ]
+
+    detection_title = "📸 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ"
+    detect_title = "🔍 AI ಮೂಲಕ ರೋಗ ಪತ್ತೆ ಮಾಡಿ"
+    detect_text = (
+        "ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. "
+        "AI ಮಾದರಿಯು ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಸಂಭವನೀಯ ರೋಗ "
+        "ಮತ್ತು ವಿಶ್ವಾಸದ ಮಟ್ಟವನ್ನು ತೋರಿಸುತ್ತದೆ."
+    )
+    upload_text = "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+
+    disease_title = "🦠 ಪತ್ತೆ ಮಾಡಬಹುದಾದ ಮಶ್ರೂಮ್ ಸ್ಥಿತಿಗಳು"
+
+    disease_names = [
+        ("ಆರೋಗ್ಯಕರ", "ರೋಗ ಪತ್ತೆಯಾಗಿಲ್ಲ"),
+        ("ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್", "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಸೋಂಕು"),
+        ("ಡ್ರೈ ಬಬಲ್", "ಶಿಲೀಂಧ್ರ ರೋಗ"),
+        ("ಕಾಬ್‌ವೆಬ್", "ಶಿಲೀಂಧ್ರ ಸೋಂಕು"),
+        ("ವೆಟ್ ಬಬಲ್", "ಶಿಲೀಂಧ್ರ ರೋಗ")
+    ]
+
+    how_title = "⚡ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?"
+
+    steps = [
+        ("1", "📷", "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"),
+        ("2", "🤖", "AI ವಿಶ್ಲೇಷಣೆ"),
+        ("3", "🔬", "ರೋಗದ ಫಲಿತಾಂಶ"),
+        ("4", "🌱", "ರೈತ ಮಾರ್ಗದರ್ಶನ")
+    ]
+
+    farmer_title = "👨‍🌾 ಮಶ್ರೂಮ್ ರೈತರಿಗಾಗಿ"
+    farmer_text = (
+        "ಮಶ್ರೂಮ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ರೋಗದ ಲಕ್ಷಣಗಳನ್ನು "
+        "ಆರಂಭದಲ್ಲೇ ಗುರುತಿಸುವುದು ರೈತರಿಗೆ ಸಹಾಯ ಮಾಡಬಹುದು. "
+        "ಈ ವ್ಯವಸ್ಥೆಯು AI ಆಧಾರಿತ ರೋಗ ಪತ್ತೆ ಮತ್ತು ಸರಳ "
+        "ಮಾಹಿತಿಯನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನೀಡುತ್ತದೆ."
+    )
+
+    result_title = "ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
+    confidence_text = "AI ವಿಶ್ವಾಸ ಮಟ್ಟ"
+
 else:
+
     hero_badge = "🌱 AI Powered Agriculture • Smart Farming"
     hero_title = "🍄 Mushroom AI Assistant"
     hero_subtitle = "Smart Mushroom Disease Detection & Farmer Support"
@@ -290,26 +363,103 @@ else:
         "for possible diseases and provide simple farmer-friendly information."
     )
 
+    dashboard_title = "🌿 Smart Farming Dashboard"
+
+    cards = [
+        (
+            "🔬",
+            "AI Disease Detection",
+            "Upload a mushroom image and let AI analyze it."
+        ),
+        (
+            "🌱",
+            "Farmer Guidance",
+            "Get simple and practical mushroom health information."
+        ),
+        (
+            "💬",
+            "AI Farmer Assistant",
+            "Ask questions about diseases and mushroom cultivation."
+        ),
+        (
+            "📊",
+            "Disease Insights",
+            "Understand detected diseases through simple information."
+        )
+    ]
+
+    detection_title = "📸 Detect Mushroom Disease"
+    detect_title = "🔍 Start Your AI Diagnosis"
+    detect_text = (
+        "Upload a clear photograph of your mushroom. "
+        "The AI model will analyze the image and show "
+        "the predicted disease and confidence level."
+    )
+    upload_text = "Choose a mushroom image"
+
+    disease_title = "🦠 Supported Mushroom Conditions"
+
+    disease_names = [
+        ("Healthy", "No disease detected"),
+        ("Bacterial Blotch", "Bacterial infection"),
+        ("Dry Bubble", "Fungal disease"),
+        ("Cobweb", "Fungal infection"),
+        ("Wet Bubble", "Fungal disease")
+    ]
+
+    how_title = "⚡ How It Works"
+
+    steps = [
+        ("1", "📷", "Upload Image"),
+        ("2", "🤖", "AI Analysis"),
+        ("3", "🔬", "Disease Result"),
+        ("4", "🌱", "Farmer Guidance")
+    ]
+
+    farmer_title = "👨‍🌾 Built for Mushroom Farmers"
+    farmer_text = (
+        "Early identification of visible disease symptoms can help "
+        "farmers take timely action. This system provides AI-based "
+        "disease prediction and simple information in one place."
+    )
+
+    result_title = "Predicted Result"
+    confidence_text = "AI Confidence"
+
+
+# =========================================================
+# HERO
+# =========================================================
+
 st.markdown(
     f"""
 <div class="hero">
-<div class="hero-badge">{hero_badge}</div>
-<div class="hero-title">{hero_title}</div>
-<div class="hero-subtitle"><b>{hero_subtitle}</b></div>
-<div class="hero-description">{hero_description}</div>
+
+<div class="hero-badge">
+{hero_badge}
+</div>
+
+<div class="hero-title">
+{hero_title}
+</div>
+
+<div class="hero-subtitle">
+<b>{hero_subtitle}</b>
+</div>
+
+<div class="hero-description">
+{hero_description}
+</div>
+
 </div>
 """,
     unsafe_allow_html=True
 )
 
+
 # =========================================================
 # DASHBOARD
 # =========================================================
-
-if is_kannada:
-    dashboard_title = "🌿 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
-else:
-    dashboard_title = "🌿 Smart Farming Dashboard"
 
 st.markdown(
     f'<div class="section-title">{dashboard_title}</div>',
@@ -318,87 +468,56 @@ st.markdown(
 
 col1, col2, col3, col4 = st.columns(4)
 
-dashboard_cards = [
-    (
-        "🔬",
-        "AI ರೋಗ ಪತ್ತೆ" if is_kannada else "AI Disease Detection",
-        "ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ರೋಗವನ್ನು ಗುರುತಿಸಲು AI ಸಹಾಯ ಮಾಡುತ್ತದೆ."
-        if is_kannada
-        else "Upload a mushroom image and let AI analyze it."
-    ),
-    (
-        "🌱",
-        "ರೈತ ಮಾರ್ಗದರ್ಶನ" if is_kannada else "Farmer Guidance",
-        "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯದ ಬಗ್ಗೆ ಸರಳ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಿರಿ."
-        if is_kannada
-        else "Get simple and practical mushroom health information."
-    ),
-    (
-        "💬",
-        "AI ರೈತ ಸಹಾಯಕ" if is_kannada else "AI Farmer Assistant",
-        "ರೋಗಗಳು ಮತ್ತು ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಬಹುದು."
-        if is_kannada
-        else "Ask questions about diseases and mushroom cultivation."
-    ),
-    (
-        "📊",
-        "ರೋಗ ಮಾಹಿತಿ" if is_kannada else "Disease Insights",
-        "ಪತ್ತೆಯಾದ ರೋಗದ ಬಗ್ಗೆ ಸುಲಭವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ."
-        if is_kannada
-        else "Understand detected diseases through simple information."
-    )
-]
+for col, card in zip(
+    [col1, col2, col3, col4],
+    cards
+):
 
-for col, card in zip([col1, col2, col3, col4], dashboard_cards):
     with col:
+
         st.markdown(
             f"""
 <div class="card">
-<div class="card-icon">{card[0]}</div>
-<div class="card-title">{card[1]}</div>
-<div class="card-text">{card[2]}</div>
+
+<div class="card-icon">
+{card[0]}
+</div>
+
+<div class="card-title">
+{card[1]}
+</div>
+
+<div class="card-text">
+{card[2]}
+</div>
+
 </div>
 """,
             unsafe_allow_html=True
         )
 
+
 # =========================================================
 # AI DETECTION
 # =========================================================
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">📸 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">📸 Detect Mushroom Disease</div>',
-        unsafe_allow_html=True
-    )
-
-if is_kannada:
-    detect_title = "🔍 AI ಮೂಲಕ ರೋಗ ಪತ್ತೆ ಮಾಡಿ"
-    detect_text = (
-        "ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. "
-        "AI ಮಾದರಿಯು ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಸಂಭವನೀಯ ರೋಗ ಮತ್ತು "
-        "ಮಾದರಿಯ ವಿಶ್ವಾಸದ ಮಟ್ಟವನ್ನು ತೋರಿಸುತ್ತದೆ."
-    )
-    upload_text = "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
-else:
-    detect_title = "🔍 Start Your AI Diagnosis"
-    detect_text = (
-        "Upload a clear photograph of your mushroom. "
-        "The AI model will analyze the image and show the "
-        "predicted disease and confidence level."
-    )
-    upload_text = "Choose a mushroom image"
+st.markdown(
+    f'<div class="section-title">{detection_title}</div>',
+    unsafe_allow_html=True
+)
 
 st.markdown(
     f"""
 <div class="detect-box">
-<div class="detect-title">{detect_title}</div>
-<div class="detect-text">{detect_text}</div>
+
+<div class="detect-title">
+{detect_title}
+</div>
+
+<div class="detect-text">
+{detect_text}
+</div>
+
 </div>
 """,
     unsafe_allow_html=True
@@ -408,6 +527,7 @@ uploaded_file = st.file_uploader(
     upload_text,
     type=["jpg", "jpeg", "png"]
 )
+
 
 # =========================================================
 # MODEL
@@ -423,9 +543,14 @@ class_names = [
     "Wet Bubble"
 ]
 
+
 @st.cache_resource
 def load_mushroom_model():
-    return tf.keras.models.load_model(MODEL_PATH)
+
+    return tf.keras.models.load_model(
+        MODEL_PATH
+    )
+
 
 # =========================================================
 # PREDICTION
@@ -433,44 +558,86 @@ def load_mushroom_model():
 
 if uploaded_file is not None:
 
-    image = Image.open(uploaded_file).convert("RGB")
+    image = Image.open(
+        uploaded_file
+    ).convert("RGB")
 
-    col_img, col_result = st.columns([1, 1])
+    col_img, col_result = st.columns(
+        [1, 1]
+    )
 
     with col_img:
+
         st.image(
             image,
-            caption="Uploaded Mushroom Image",
+            caption=(
+                "ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರ"
+                if is_kannada
+                else "Uploaded Mushroom Image"
+            ),
             use_container_width=True
         )
 
     with col_result:
 
         with st.spinner(
-            "AI is analyzing the image..."
-            if not is_kannada
-            else "AI ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತಿದೆ..."
+            "AI ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತಿದೆ..."
+            if is_kannada
+            else "AI is analyzing the image..."
         ):
 
             model = load_mushroom_model()
 
-            img = image.resize((224, 224))
-            img_array = np.array(img) / 255.0
-            img_array = np.expand_dims(img_array, axis=0)
+            img = image.resize(
+                (224, 224)
+            )
 
-            predictions = model.predict(img_array, verbose=0)
+            img_array = (
+                np.array(img) / 255.0
+            )
 
-            predicted_index = int(np.argmax(predictions[0]))
-            confidence = float(predictions[0][predicted_index]) * 100
+            img_array = np.expand_dims(
+                img_array,
+                axis=0
+            )
 
-            predicted_class = class_names[predicted_index]
+            predictions = model.predict(
+                img_array,
+                verbose=0
+            )
+
+            predicted_index = int(
+                np.argmax(
+                    predictions[0]
+                )
+            )
+
+            confidence = (
+                float(
+                    predictions[0][predicted_index]
+                ) * 100
+            )
+
+            predicted_class = class_names[
+                predicted_index
+            ]
 
         kannada_names = {
-            "Healthy": "ಆರೋಗ್ಯಕರ",
-            "Bacterial Blotch": "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್",
-            "Dry Bubble": "ಡ್ರೈ ಬಬಲ್",
-            "Cobweb": "ಕಾಬ್‌ವೆಬ್",
-            "Wet Bubble": "ವೆಟ್ ಬಬಲ್"
+
+            "Healthy":
+                "ಆರೋಗ್ಯಕರ",
+
+            "Bacterial Blotch":
+                "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್",
+
+            "Dry Bubble":
+                "ಡ್ರೈ ಬಬಲ್",
+
+            "Cobweb":
+                "ಕಾಬ್‌ವೆಬ್",
+
+            "Wet Bubble":
+                "ವೆಟ್ ಬಬಲ್"
         }
 
         display_name = (
@@ -479,26 +646,18 @@ if uploaded_file is not None:
             else predicted_class
         )
 
-        result_label = (
-            "ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
-            if is_kannada
-            else "Predicted Result"
-        )
-
-        confidence_label = (
-            "AI ವಿಶ್ವಾಸ ಮಟ್ಟ"
-            if is_kannada
-            else "AI Confidence"
-        )
-
         st.markdown(
             f"""
 <div class="result-box">
+
 <div class="result-title">
-{result_label}
+{result_title}
 </div>
 
-<div style="font-size:35px; margin:15px;">
+<div style="
+font-size:35px;
+margin:15px;
+">
 🍄
 </div>
 
@@ -511,150 +670,168 @@ color:#064e3b;
 </div>
 
 <div class="confidence">
-{confidence_label}: {confidence:.2f}%
+{confidence_text}: {confidence:.2f}%
 </div>
+
 </div>
 """,
             unsafe_allow_html=True
         )
 
+
 # =========================================================
 # SUPPORTED DISEASES
 # =========================================================
-
-if is_kannada:
-    disease_title = "🦠 ಪತ್ತೆ ಮಾಡಬಹುದಾದ ಮಶ್ರೂಮ್ ಸ್ಥಿತಿಗಳು"
-else:
-    disease_title = "🦠 Supported Mushroom Conditions"
 
 st.markdown(
     f'<div class="section-title">{disease_title}</div>',
     unsafe_allow_html=True
 )
 
-diseases = [
-    ("🍄", "Healthy", "No disease detected", "ರೋಗ ಪತ್ತೆಯಾಗಿಲ್ಲ"),
-    ("🟠", "Bacterial Blotch", "Bacterial infection", "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಸೋಂಕು"),
-    ("🟤", "Dry Bubble", "Fungal disease", "ಶಿಲೀಂಧ್ರ ರೋಗ"),
-    ("⚪", "Cobweb", "Fungal infection", "ಶಿಲೀಂಧ್ರ ಸೋಂಕು"),
-    ("🔵", "Wet Bubble", "Fungal disease", "ಶಿಲೀಂಧ್ರ ರೋಗ")
+disease_icons = [
+    "🍄",
+    "🟠",
+    "🟤",
+    "⚪",
+    "🔵"
 ]
 
 d1, d2, d3, d4, d5 = st.columns(5)
 
-for col, disease in zip([d1, d2, d3, d4, d5], diseases):
+for col, icon, disease in zip(
+    [d1, d2, d3, d4, d5],
+    disease_icons,
+    disease_names
+):
 
     with col:
-
-        name = disease[1]
-        description = disease[3] if is_kannada else disease[2]
 
         st.markdown(
             f"""
 <div class="disease-card">
-<div class="disease-icon">{disease[0]}</div>
-<div class="disease-name">{name}</div>
-<div class="disease-description">{description}</div>
+
+<div class="disease-icon">
+{icon}
+</div>
+
+<div class="disease-name">
+{disease[0]}
+</div>
+
+<div class="disease-description">
+{disease[1]}
+</div>
+
 </div>
 """,
             unsafe_allow_html=True
         )
 
+
 # =========================================================
 # HOW IT WORKS
 # =========================================================
-
-if is_kannada:
-    how_title = "⚡ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?"
-else:
-    how_title = "⚡ How It Works"
 
 st.markdown(
     f'<div class="section-title">{how_title}</div>',
     unsafe_allow_html=True
 )
 
-steps = [
-    ("1", "📷", "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ" if is_kannada else "Upload Image"),
-    ("2", "🤖", "AI ವಿಶ್ಲೇಷಣೆ" if is_kannada else "AI Analysis"),
-    ("3", "🔬", "ರೋಗದ ಫಲಿತಾಂಶ" if is_kannada else "Disease Result"),
-    ("4", "🌱", "ರೈತ ಮಾರ್ಗದರ್ಶನ" if is_kannada else "Farmer Guidance")
-]
-
 s1, s2, s3, s4 = st.columns(4)
 
-for col, step in zip([s1, s2, s3, s4], steps):
+for col, step in zip(
+    [s1, s2, s3, s4],
+    steps
+):
 
     with col:
 
         st.markdown(
             f"""
 <div class="step-card">
-<div class="step-number">{step[0]}</div>
-<div class="step-icon">{step[1]}</div>
-<div class="step-name">{step[2]}</div>
+
+<div class="step-number">
+{step[0]}
+</div>
+
+<div class="step-icon">
+{step[1]}
+</div>
+
+<div class="step-name">
+{step[2]}
+</div>
+
 </div>
 """,
             unsafe_allow_html=True
         )
 
+
 # =========================================================
 # FARMER SUPPORT
 # =========================================================
 
-if is_kannada:
-
-    st.markdown("""
+st.markdown(
+    f"""
 <div class="farmer-box">
-<h2>👨‍🌾 ಮಶ್ರೂಮ್ ರೈತರಿಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ</h2>
+
+<h2>{farmer_title}</h2>
 
 <p>
-ಮಶ್ರೂಮ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ರೋಗದ ಲಕ್ಷಣಗಳನ್ನು
-ಆರಂಭದಲ್ಲೇ ಗುರುತಿಸುವುದು ರೈತರಿಗೆ ಸಹಾಯ ಮಾಡಬಹುದು.
-ಈ ವ್ಯವಸ್ಥೆಯು AI ಆಧಾರಿತ ರೋಗ ಪತ್ತೆ ಮತ್ತು ಸರಳ
-ಮಾಹಿತಿಯನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನೀಡುತ್ತದೆ.
+{farmer_text}
 </p>
 
 <p>
-🌱 ಸರಳ ಬಳಕೆ &nbsp; • &nbsp;
-📱 ಮೊಬೈಲ್ ಸ್ನೇಹಿ &nbsp; • &nbsp;
-🌐 ಕನ್ನಡ ಮತ್ತು English &nbsp; • &nbsp;
-🤖 AI ಆಧಾರಿತ
+🌱 {"ಸರಳ ಬಳಕೆ" if is_kannada else "Simple interface"}
+&nbsp; • &nbsp;
+
+📱 {"ಮೊಬೈಲ್ ಸ್ನೇಹಿ" if is_kannada else "Mobile friendly"}
+&nbsp; • &nbsp;
+
+🌐 {"ಕನ್ನಡ ಮತ್ತು English" if is_kannada else "English & Kannada"}
+&nbsp; • &nbsp;
+
+🤖 {"AI ಆಧಾರಿತ" if is_kannada else "AI powered"}
 </p>
+
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
 
-else:
-
-    st.markdown("""
-<div class="farmer-box">
-<h2>👨‍🌾 Built for Mushroom Farmers</h2>
-
-<p>
-Early identification of visible disease symptoms can help
-farmers take timely action. This system provides AI-based
-disease prediction and simple information in one place.
-</p>
-
-<p>
-🌱 Simple interface &nbsp; • &nbsp;
-📱 Mobile friendly &nbsp; • &nbsp;
-🌐 English & Kannada &nbsp; • &nbsp;
-🤖 AI powered
-</p>
-</div>
-""", unsafe_allow_html=True)
 
 # =========================================================
 # FOOTER
 # =========================================================
 
-st.markdown("""
+footer_warning = (
+    "⚠️ AI ಫಲಿತಾಂಶಗಳು ಮಾಹಿತಿ ಉದ್ದೇಶಕ್ಕಾಗಿ ಮಾತ್ರ. "
+    "ಪ್ರಮುಖ ಬೆಳೆ ನಿರ್ಧಾರಗಳಿಗಾಗಿ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+    if is_kannada
+    else
+    "⚠️ AI predictions are for informational purposes. "
+    "For important crop decisions, consult an agricultural expert."
+)
+
+st.markdown(
+    f"""
 <div class="footer">
-🍄 <b>Mushroom AI Assistant</b><br>
-AI-based mushroom disease detection and farmer support
+
+🍄 <b>Mushroom AI Assistant</b>
+
+<br>
+
+{"AI ಆಧಾರಿತ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರ ಸಹಾಯ"
+ if is_kannada
+ else
+ "AI-based mushroom disease detection and farmer support"}
+
 <br><br>
-⚠️ AI predictions are for informational purposes.
-For important crop decisions, consult an agricultural expert.
+
+{footer_warning}
+
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
