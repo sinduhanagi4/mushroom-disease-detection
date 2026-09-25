@@ -3,266 +3,107 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 
-# =========================================================
-# PAGE SETTINGS
-# =========================================================
+# ==================================================
+# PAGE CONFIGURATION
+# ==================================================
 
 st.set_page_config(
-    page_title="Mushroom AI Assistant",
+    page_title="Mushroom Disease Detection",
     page_icon="🍄",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
-# =========================================================
+# ==================================================
 # CUSTOM CSS
-# =========================================================
+# ==================================================
 
 st.markdown("""
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Poppins', sans-serif;
+.main {
+    background-color: #f6fff8;
 }
 
-.stApp {
-    background: linear-gradient(135deg, #f0fdf4, #ffffff, #ecfdf5);
-}
-
-.block-container {
-    padding-top: 1.5rem;
-    padding-bottom: 2rem;
-    max-width: 1200px;
-}
-
-/* HERO */
 .hero {
-    background: linear-gradient(135deg, #064e3b, #047857, #10b981);
-    padding: 42px;
-    border-radius: 28px;
-    color: white;
-    margin-bottom: 25px;
-    box-shadow: 0 15px 40px rgba(5, 150, 105, 0.22);
-}
-
-.hero-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.18);
-    padding: 7px 15px;
-    border-radius: 30px;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.hero-title {
-    font-size: 42px;
-    font-weight: 800;
-    margin: 0;
-}
-
-.hero-subtitle {
-    font-size: 19px;
-    margin-top: 10px;
-}
-
-.hero-description {
-    font-size: 15px;
-    line-height: 1.7;
-    opacity: 0.95;
-}
-
-/* SECTION */
-.section-title {
-    color: #064e3b;
-    font-size: 27px;
-    font-weight: 700;
-    margin-top: 28px;
-    margin-bottom: 15px;
-}
-
-/* DASHBOARD CARDS */
-.card {
-    background: white;
-    border: 1px solid #d1fae5;
-    border-radius: 20px;
-    padding: 22px;
-    min-height: 165px;
-    box-shadow: 0 7px 22px rgba(6,78,59,0.08);
-}
-
-.card-icon {
-    font-size: 34px;
-    margin-bottom: 8px;
-}
-
-.card-title {
-    color: #065f46;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.card-text {
-    color: #4b5563;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-/* DISEASE */
-.disease-card {
-    background: white;
-    border: 1px solid #d1fae5;
-    border-radius: 18px;
-    padding: 18px 10px;
-    text-align: center;
-    min-height: 130px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.05);
-}
-
-.disease-icon {
-    font-size: 30px;
-}
-
-.disease-name {
-    color: #065f46;
-    font-weight: 700;
-    font-size: 14px;
-    margin-top: 7px;
-}
-
-.disease-description {
-    color: #6b7280;
-    font-size: 11px;
-}
-
-/* HOW IT WORKS */
-.step-card {
-    background: white;
-    border: 1px solid #bbf7d0;
-    border-radius: 18px;
-    padding: 20px;
-    text-align: center;
-    min-height: 145px;
-}
-
-.step-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #059669;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 17px;
-}
-
-.step-icon {
-    font-size: 30px;
-    margin: 10px 0;
-}
-
-.step-name {
-    color: #065f46;
-    font-weight: 700;
-}
-
-/* DETECTION */
-.detect-box {
-    background: linear-gradient(135deg, #064e3b, #047857);
-    padding: 30px;
+    background: linear-gradient(135deg, #0f9d58, #34c759);
+    padding: 40px;
     border-radius: 25px;
     color: white;
-    box-shadow: 0 12px 30px rgba(6,78,59,0.18);
-}
-
-.detect-title {
-    font-size: 26px;
-    font-weight: 700;
-}
-
-.detect-text {
-    color: #d1fae5;
-    line-height: 1.7;
-}
-
-/* RESULT */
-.result-box {
-    background: linear-gradient(135deg, #ecfdf5, #ffffff);
-    border: 2px solid #10b981;
-    padding: 25px;
-    border-radius: 22px;
     text-align: center;
-    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
-.result-title {
-    color: #065f46;
-    font-size: 25px;
-    font-weight: 800;
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
 }
 
-.confidence {
-    color: #047857;
+.hero p {
     font-size: 18px;
-    font-weight: 700;
 }
 
-/* FARMER */
-.farmer-box {
-    background: linear-gradient(135deg, #14532d, #166534);
-    color: white;
-    padding: 28px;
-    border-radius: 24px;
-    margin-top: 25px;
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
 }
 
-.farmer-box h2 {
-    color: white;
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    min-height: 170px;
 }
 
-.farmer-box p {
-    color: #dcfce7;
-    line-height: 1.7;
+.result-card {
+    background: linear-gradient(135deg, #e8f5e9, #ffffff);
+    padding: 30px;
+    border-radius: 25px;
+    border-left: 8px solid #0f9d58;
+    margin-top: 20px;
 }
 
-/* FOOTER */
+.advice-card {
+    background: #fff8e1;
+    padding: 25px;
+    border-radius: 20px;
+    border-left: 8px solid #ffb300;
+    margin-top: 20px;
+}
+
+.section-title {
+    color: #137333;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.disease-card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    text-align: center;
+    min-height: 140px;
+}
+
 .footer {
     text-align: center;
-    color: #6b7280;
-    padding: 30px 10px 10px;
-    font-size: 12px;
+    padding: 30px;
+    color: #666;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-
-# =========================================================
-# LANGUAGE SELECTOR
-# =========================================================
-
-st.markdown("""
-<div style="
-background: linear-gradient(135deg,#064e3b,#059669);
-padding: 16px;
-border-radius: 18px;
-text-align: center;
-margin-bottom: 10px;
-">
-
-<div style="
-color:white;
-font-size:17px;
-font-weight:700;
-">
-🌐 SELECT LANGUAGE / ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ
-</div>
-
-</div>
-""", unsafe_allow_html=True)
+# ==================================================
+# LANGUAGE SELECTION
+# ==================================================
 
 language = st.radio(
     "Language",
@@ -273,267 +114,21 @@ language = st.radio(
 
 is_kannada = language == "🇮🇳 ಕನ್ನಡ"
 
-
-# =========================================================
-# TEXT TRANSLATIONS
-# =========================================================
-
-if is_kannada:
-
-    hero_badge = "🌱 ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ • ಸ್ಮಾರ್ಟ್ ಕೃಷಿ"
-    hero_title = "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
-    hero_subtitle = "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರ ಸಹಾಯ"
-    hero_description = (
-        "ಮಶ್ರೂಮ್‌ನ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. "
-        "AI ಮಾದರಿಯು ಸಂಭವನೀಯ ರೋಗವನ್ನು ಗುರುತಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ "
-        "ಮತ್ತು ಸರಳ ರೈತ ಸ್ನೇಹಿ ಮಾಹಿತಿಯನ್ನು ನೀಡುತ್ತದೆ."
-    )
-
-    dashboard_title = "🌿 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
-
-    cards = [
-        (
-            "🔬",
-            "AI ರೋಗ ಪತ್ತೆ",
-            "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು AI ಮೂಲಕ ವಿಶ್ಲೇಷಿಸಿ."
-        ),
-        (
-            "🌱",
-            "ರೈತ ಮಾರ್ಗದರ್ಶನ",
-            "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯದ ಬಗ್ಗೆ ಸರಳ ಮತ್ತು ಉಪಯುಕ್ತ ಮಾಹಿತಿ ಪಡೆಯಿರಿ."
-        ),
-        (
-            "💬",
-            "AI ರೈತ ಸಹಾಯಕ",
-            "ಮಶ್ರೂಮ್ ರೋಗಗಳು ಮತ್ತು ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ."
-        ),
-        (
-            "📊",
-            "ರೋಗ ಮಾಹಿತಿ",
-            "ಪತ್ತೆಯಾದ ರೋಗದ ಬಗ್ಗೆ ಸುಲಭವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ."
-        )
-    ]
-
-    detection_title = "📸 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ"
-    detect_title = "🔍 AI ಮೂಲಕ ರೋಗ ಪತ್ತೆ ಮಾಡಿ"
-    detect_text = (
-        "ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. "
-        "AI ಮಾದರಿಯು ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಸಂಭವನೀಯ ರೋಗ "
-        "ಮತ್ತು ವಿಶ್ವಾಸದ ಮಟ್ಟವನ್ನು ತೋರಿಸುತ್ತದೆ."
-    )
-    upload_text = "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
-
-    disease_title = "🦠 ಪತ್ತೆ ಮಾಡಬಹುದಾದ ಮಶ್ರೂಮ್ ಸ್ಥಿತಿಗಳು"
-
-    disease_names = [
-        ("ಆರೋಗ್ಯಕರ", "ರೋಗ ಪತ್ತೆಯಾಗಿಲ್ಲ"),
-        ("ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್", "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಸೋಂಕು"),
-        ("ಡ್ರೈ ಬಬಲ್", "ಶಿಲೀಂಧ್ರ ರೋಗ"),
-        ("ಕಾಬ್‌ವೆಬ್", "ಶಿಲೀಂಧ್ರ ಸೋಂಕು"),
-        ("ವೆಟ್ ಬಬಲ್", "ಶಿಲೀಂಧ್ರ ರೋಗ")
-    ]
-
-    how_title = "⚡ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?"
-
-    steps = [
-        ("1", "📷", "ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"),
-        ("2", "🤖", "AI ವಿಶ್ಲೇಷಣೆ"),
-        ("3", "🔬", "ರೋಗದ ಫಲಿತಾಂಶ"),
-        ("4", "🌱", "ರೈತ ಮಾರ್ಗದರ್ಶನ")
-    ]
-
-    farmer_title = "👨‍🌾 ಮಶ್ರೂಮ್ ರೈತರಿಗಾಗಿ"
-    farmer_text = (
-        "ಮಶ್ರೂಮ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ರೋಗದ ಲಕ್ಷಣಗಳನ್ನು "
-        "ಆರಂಭದಲ್ಲೇ ಗುರುತಿಸುವುದು ರೈತರಿಗೆ ಸಹಾಯ ಮಾಡಬಹುದು. "
-        "ಈ ವ್ಯವಸ್ಥೆಯು AI ಆಧಾರಿತ ರೋಗ ಪತ್ತೆ ಮತ್ತು ಸರಳ "
-        "ಮಾಹಿತಿಯನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನೀಡುತ್ತದೆ."
-    )
-
-    result_title = "ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
-    confidence_text = "AI ವಿಶ್ವಾಸ ಮಟ್ಟ"
-
-else:
-
-    hero_badge = "🌱 AI Powered Agriculture • Smart Farming"
-    hero_title = "🍄 Mushroom AI Assistant"
-    hero_subtitle = "Smart Mushroom Disease Detection & Farmer Support"
-    hero_description = (
-        "Upload a mushroom image and let our AI model analyze it "
-        "for possible diseases and provide simple farmer-friendly information."
-    )
-
-    dashboard_title = "🌿 Smart Farming Dashboard"
-
-    cards = [
-        (
-            "🔬",
-            "AI Disease Detection",
-            "Upload a mushroom image and let AI analyze it."
-        ),
-        (
-            "🌱",
-            "Farmer Guidance",
-            "Get simple and practical mushroom health information."
-        ),
-        (
-            "💬",
-            "AI Farmer Assistant",
-            "Ask questions about diseases and mushroom cultivation."
-        ),
-        (
-            "📊",
-            "Disease Insights",
-            "Understand detected diseases through simple information."
-        )
-    ]
-
-    detection_title = "📸 Detect Mushroom Disease"
-    detect_title = "🔍 Start Your AI Diagnosis"
-    detect_text = (
-        "Upload a clear photograph of your mushroom. "
-        "The AI model will analyze the image and show "
-        "the predicted disease and confidence level."
-    )
-    upload_text = "Choose a mushroom image"
-
-    disease_title = "🦠 Supported Mushroom Conditions"
-
-    disease_names = [
-        ("Healthy", "No disease detected"),
-        ("Bacterial Blotch", "Bacterial infection"),
-        ("Dry Bubble", "Fungal disease"),
-        ("Cobweb", "Fungal infection"),
-        ("Wet Bubble", "Fungal disease")
-    ]
-
-    how_title = "⚡ How It Works"
-
-    steps = [
-        ("1", "📷", "Upload Image"),
-        ("2", "🤖", "AI Analysis"),
-        ("3", "🔬", "Disease Result"),
-        ("4", "🌱", "Farmer Guidance")
-    ]
-
-    farmer_title = "👨‍🌾 Built for Mushroom Farmers"
-    farmer_text = (
-        "Early identification of visible disease symptoms can help "
-        "farmers take timely action. This system provides AI-based "
-        "disease prediction and simple information in one place."
-    )
-
-    result_title = "Predicted Result"
-    confidence_text = "AI Confidence"
-
-
-# =========================================================
-# HERO
-# =========================================================
-
-st.markdown(
-    f"""
-<div class="hero">
-
-<div class="hero-badge">
-{hero_badge}
-</div>
-
-<div class="hero-title">
-{hero_title}
-</div>
-
-<div class="hero-subtitle">
-<b>{hero_subtitle}</b>
-</div>
-
-<div class="hero-description">
-{hero_description}
-</div>
-
-</div>
-""",
-    unsafe_allow_html=True
-)
-
-
-# =========================================================
-# DASHBOARD
-# =========================================================
-
-st.markdown(
-    f'<div class="section-title">{dashboard_title}</div>',
-    unsafe_allow_html=True
-)
-
-col1, col2, col3, col4 = st.columns(4)
-
-for col, card in zip(
-    [col1, col2, col3, col4],
-    cards
-):
-
-    with col:
-
-        st.markdown(
-            f"""
-<div class="card">
-
-<div class="card-icon">
-{card[0]}
-</div>
-
-<div class="card-title">
-{card[1]}
-</div>
-
-<div class="card-text">
-{card[2]}
-</div>
-
-</div>
-""",
-            unsafe_allow_html=True
-        )
-
-
-# =========================================================
-# AI DETECTION
-# =========================================================
-
-st.markdown(
-    f'<div class="section-title">{detection_title}</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    f"""
-<div class="detect-box">
-
-<div class="detect-title">
-{detect_title}
-</div>
-
-<div class="detect-text">
-{detect_text}
-</div>
-
-</div>
-""",
-    unsafe_allow_html=True
-)
-
-uploaded_file = st.file_uploader(
-    upload_text,
-    type=["jpg", "jpeg", "png"]
-)
-
-
-# =========================================================
-# MODEL
-# =========================================================
+# ==================================================
+# LOAD MODEL
+# ==================================================
 
 MODEL_PATH = "mushroom_disease_mobilenetv2.keras"
+
+@st.cache_resource
+def load_model():
+    return tf.keras.models.load_model(MODEL_PATH)
+
+model = load_model()
+
+# ==================================================
+# CLASS NAMES
+# ==================================================
 
 class_names = [
     "Healthy",
@@ -543,295 +138,728 @@ class_names = [
     "Wet Bubble"
 ]
 
+# Kannada disease names
 
-@st.cache_resource
-def load_mushroom_model():
+kannada_names = {
+    "Healthy": "ಆರೋಗ್ಯಕರ",
+    "Bacterial Blotch": "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್",
+    "Dry Bubble": "ಡ್ರೈ ಬಬಲ್",
+    "Cobweb": "ಕಾಬ್‌ವೆಬ್",
+    "Wet Bubble": "ವೆಟ್ ಬಬಲ್"
+}
 
-    return tf.keras.models.load_model(
-        MODEL_PATH
+# ==================================================
+# DISEASE-SPECIFIC FARMER ADVICE
+# ==================================================
+
+advice_english = {
+
+    "Healthy": {
+        "title": "🌱 Your mushroom appears healthy",
+        "points": [
+            "Continue maintaining good farm hygiene.",
+            "Monitor mushrooms regularly for early signs of disease.",
+            "Maintain suitable temperature, humidity and ventilation.",
+            "Remove damaged or contaminated material promptly."
+        ]
+    },
+
+    "Bacterial Blotch": {
+        "title": "⚠️ Bacterial Blotch detected",
+        "points": [
+            "Remove visibly affected mushrooms carefully.",
+            "Avoid excessive moisture on mushroom surfaces.",
+            "Improve air circulation and ventilation.",
+            "Keep growing areas and equipment clean.",
+            "Monitor nearby mushrooms for similar symptoms."
+        ]
+    },
+
+    "Dry Bubble": {
+        "title": "⚠️ Dry Bubble detected",
+        "points": [
+            "Remove affected mushrooms and contaminated material carefully.",
+            "Maintain good sanitation in the growing area.",
+            "Improve ventilation and environmental management.",
+            "Avoid spreading contaminated material to healthy areas.",
+            "Seek advice from an agricultural expert if the problem increases."
+        ]
+    },
+
+    "Cobweb": {
+        "title": "⚠️ Cobweb detected",
+        "points": [
+            "Remove visibly affected mushrooms carefully.",
+            "Maintain good hygiene around the growing area.",
+            "Improve ventilation and air circulation.",
+            "Avoid disturbing infected material unnecessarily.",
+            "Monitor surrounding mushrooms for further symptoms."
+        ]
+    },
+
+    "Wet Bubble": {
+        "title": "⚠️ Wet Bubble detected",
+        "points": [
+            "Remove affected mushrooms carefully.",
+            "Avoid spreading contaminated material.",
+            "Maintain clean tools and growing areas.",
+            "Control excessive moisture and improve ventilation.",
+            "Monitor the crop regularly for additional symptoms."
+        ]
+    }
+}
+
+# ==================================================
+# KANNADA DISEASE ADVICE
+# ==================================================
+
+advice_kannada = {
+
+    "Healthy": {
+        "title": "🌱 ನಿಮ್ಮ ಅಣಬೆ ಆರೋಗ್ಯಕರವಾಗಿ ಕಾಣುತ್ತಿದೆ",
+        "points": [
+            "ಕೃಷಿ ಪ್ರದೇಶದಲ್ಲಿ ಉತ್ತಮ ಸ್ವಚ್ಛತೆಯನ್ನು ಮುಂದುವರಿಸಿ.",
+            "ರೋಗದ ಲಕ್ಷಣಗಳನ್ನು ಆರಂಭದಲ್ಲೇ ಗುರುತಿಸಲು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ.",
+            "ಸೂಕ್ತ ತಾಪಮಾನ, ತೇವಾಂಶ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
+            "ಹಾನಿಗೊಳಗಾದ ಅಥವಾ ಕಲುಷಿತ ವಸ್ತುಗಳನ್ನು ತಕ್ಷಣ ತೆಗೆದುಹಾಕಿ."
+        ]
+    },
+
+    "Bacterial Blotch": {
+        "title": "⚠️ ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಪತ್ತೆಯಾಗಿದೆ",
+        "points": [
+            "ಬಾಧಿತ ಅಣಬೆಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+            "ಅಣಬೆಗಳ ಮೇಲ್ಮೈಯಲ್ಲಿ ಅತಿಯಾದ ತೇವಾಂಶ ಇರದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+            "ಗಾಳಿಯ ಹರಿವು ಮತ್ತು ವಾತಾಯನವನ್ನು ಉತ್ತಮಗೊಳಿಸಿ.",
+            "ಬೆಳೆ ಪ್ರದೇಶ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+            "ಪಕ್ಕದಲ್ಲಿರುವ ಅಣಬೆಗಳಲ್ಲಿ ಇದೇ ರೀತಿಯ ಲಕ್ಷಣಗಳಿವೆಯೇ ಎಂದು ಪರಿಶೀಲಿಸಿ."
+        ]
+    },
+
+    "Dry Bubble": {
+        "title": "⚠️ ಡ್ರೈ ಬಬಲ್ ಪತ್ತೆಯಾಗಿದೆ",
+        "points": [
+            "ಬಾಧಿತ ಅಣಬೆಗಳು ಮತ್ತು ಕಲುಷಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+            "ಬೆಳೆಯುವ ಪ್ರದೇಶದಲ್ಲಿ ಉತ್ತಮ ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
+            "ವಾತಾಯನ ಮತ್ತು ಪರಿಸರ ನಿರ್ವಹಣೆಯನ್ನು ಉತ್ತಮಗೊಳಿಸಿ.",
+            "ಕಲುಷಿತ ವಸ್ತುಗಳು ಆರೋಗ್ಯಕರ ಪ್ರದೇಶಗಳಿಗೆ ಹರಡದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+            "ಸಮಸ್ಯೆ ಹೆಚ್ಚಾದರೆ ಕೃಷಿ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+        ]
+    },
+
+    "Cobweb": {
+        "title": "⚠️ ಕಾಬ್‌ವೆಬ್ ರೋಗ ಪತ್ತೆಯಾಗಿದೆ",
+        "points": [
+            "ಬಾಧಿತ ಅಣಬೆಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+            "ಬೆಳೆಯುವ ಪ್ರದೇಶದಲ್ಲಿ ಉತ್ತಮ ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
+            "ವಾತಾಯನ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಉತ್ತಮಗೊಳಿಸಿ.",
+            "ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಅನಗತ್ಯವಾಗಿ ಅಲುಗಾಡಿಸುವುದನ್ನು ತಪ್ಪಿಸಿ.",
+            "ಸುತ್ತಮುತ್ತಲಿನ ಅಣಬೆಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+        ]
+    },
+
+    "Wet Bubble": {
+        "title": "⚠️ ವೆಟ್ ಬಬಲ್ ರೋಗ ಪತ್ತೆಯಾಗಿದೆ",
+        "points": [
+            "ಬಾಧಿತ ಅಣಬೆಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+            "ಕಲುಷಿತ ವಸ್ತುಗಳು ಇತರ ಪ್ರದೇಶಗಳಿಗೆ ಹರಡದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+            "ಉಪಕರಣಗಳು ಮತ್ತು ಬೆಳೆಯುವ ಪ್ರದೇಶವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+            "ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ನಿಯಂತ್ರಿಸಿ ಮತ್ತು ವಾತಾಯನವನ್ನು ಉತ್ತಮಗೊಳಿಸಿ.",
+            "ಬೆಳೆಯನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+        ]
+    }
+}
+
+# ==================================================
+# HERO SECTION
+# ==================================================
+
+if is_kannada:
+
+    hero_title = "🍄 ಅಣಬೆ ರೋಗ ಪತ್ತೆ ವ್ಯವಸ್ಥೆ"
+    hero_text = "AI ಮತ್ತು Deep Learning ಬಳಸಿ ಅಣಬೆಗಳ ರೋಗವನ್ನು ಗುರುತಿಸಿ"
+
+else:
+
+    hero_title = "🍄 Mushroom Disease Detection"
+    hero_text = "Detect mushroom diseases using AI and Deep Learning"
+
+st.markdown(
+    f"""
+    <div class="hero">
+        <h1>{hero_title}</h1>
+        <p>{hero_text}</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# ==================================================
+# DASHBOARD
+# ==================================================
+
+if is_kannada:
+
+    st.markdown(
+        '<div class="section-title">📊 ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</div>',
+        unsafe_allow_html=True
     )
 
+else:
 
-# =========================================================
+    st.markdown(
+        '<div class="section-title">📊 Dashboard</div>',
+        unsafe_allow_html=True
+    )
+
+col1, col2, col3, col4 = st.columns(4)
+
+# Dashboard Card 1
+
+with col1:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🔬</h2>
+            <h3>AI ರೋಗ ಪತ್ತೆ</h3>
+            <p>ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ರೋಗವನ್ನು ಗುರುತಿಸಿ</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🔬</h2>
+            <h3>AI Disease Detection</h3>
+            <p>Upload an image to detect disease</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Dashboard Card 2
+
+with col2:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🌱</h2>
+            <h3>ರೈತ ಮಾರ್ಗದರ್ಶನ</h3>
+            <p>ರೋಗದ ಆಧಾರದ ಮೇಲೆ ಸಲಹೆ ಪಡೆಯಿರಿ</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🌱</h2>
+            <h3>Farmer Guidance</h3>
+            <p>Get advice based on the prediction</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Dashboard Card 3
+
+with col3:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🤖</h2>
+            <h3>AI ಸಹಾಯಕ</h3>
+            <p>ಅಣಬೆ ಕೃಷಿಯ ಬಗ್ಗೆ ಸಹಾಯ ಪಡೆಯಿರಿ</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>🤖</h2>
+            <h3>AI Assistant</h3>
+            <p>Get help with mushroom farming</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Dashboard Card 4
+
+with col4:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>📊</h2>
+            <h3>ರೋಗ ಮಾಹಿತಿ</h3>
+            <p>ಸಾಮಾನ್ಯ ಅಣಬೆ ರೋಗಗಳ ಮಾಹಿತಿ</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="dashboard-card">
+            <h2>📊</h2>
+            <h3>Disease Insights</h3>
+            <p>Learn about common mushroom diseases</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==================================================
+# HOMEPAGE FARMER ADVICE
+# ==================================================
+
+if is_kannada:
+
+    st.markdown(
+        '<div class="section-title">🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        "ಅಣಬೆ ಬೆಳೆಯಲ್ಲಿ ಉತ್ತಮ ಆರೋಗ್ಯ ಮತ್ತು ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಈ ಸಲಹೆಗಳನ್ನು ಅನುಸರಿಸಿ."
+    )
+
+else:
+
+    st.markdown(
+        '<div class="section-title">🌱 Farmer Advice</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        "Follow these simple practices to maintain healthy mushroom cultivation."
+    )
+
+advice_col1, advice_col2, advice_col3, advice_col4 = st.columns(4)
+
+# Advice 1
+
+with advice_col1:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🧼</h2>
+            <h3>ಸ್ವಚ್ಛತೆ</h3>
+            <p>ಬೆಳೆಯುವ ಪ್ರದೇಶ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🧼</h2>
+            <h3>Maintain Hygiene</h3>
+            <p>Keep the growing area and equipment clean.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Advice 2
+
+with advice_col2:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="card">
+            <h2>💧</h2>
+            <h3>ತೇವಾಂಶ ನಿಯಂತ್ರಣ</h3>
+            <p>ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಪರಿಸರವನ್ನು ಗಮನಿಸಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="card">
+            <h2>💧</h2>
+            <h3>Control Moisture</h3>
+            <p>Avoid excessive moisture and monitor the growing environment.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Advice 3
+
+with advice_col3:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🌬️</h2>
+            <h3>ವಾತಾಯನ</h3>
+            <p>ಬೆಳೆಯುವ ಪ್ರದೇಶದಲ್ಲಿ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🌬️</h2>
+            <h3>Good Ventilation</h3>
+            <p>Maintain good air circulation in the growing area.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Advice 4
+
+with advice_col4:
+
+    if is_kannada:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🔍</h2>
+            <h3>ನಿಯಮಿತ ಪರಿಶೀಲನೆ</h3>
+            <p>ರೋಗದ ಆರಂಭಿಕ ಲಕ್ಷಣಗಳಿಗಾಗಿ ಅಣಬೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="card">
+            <h2>🔍</h2>
+            <h3>Regular Inspection</h3>
+            <p>Regularly inspect mushrooms for early signs of disease.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==================================================
+# DETECTION SECTION
+# ==================================================
+
+if is_kannada:
+
+    st.markdown(
+        '<div class="section-title">🔬 ಅಣಬೆ ರೋಗ ಪತ್ತೆ</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        "ಅಣಬೆಯ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು AI ಮೂಲಕ ವಿಶ್ಲೇಷಿಸಿ."
+    )
+
+    uploaded_file = st.file_uploader(
+        "ಅಣಬೆ ಚಿತ್ರದ ಆಯ್ಕೆ",
+        type=["jpg", "jpeg", "png"]
+    )
+
+else:
+
+    st.markdown(
+        '<div class="section-title">🔬 Mushroom Disease Detection</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        "Upload a mushroom image and let the AI analyze it."
+    )
+
+    uploaded_file = st.file_uploader(
+        "Choose a mushroom image",
+        type=["jpg", "jpeg", "png"]
+    )
+
+# ==================================================
 # PREDICTION
-# =========================================================
+# ==================================================
 
 if uploaded_file is not None:
 
-    image = Image.open(
-        uploaded_file
-    ).convert("RGB")
+    image = Image.open(uploaded_file).convert("RGB")
 
-    col_img, col_result = st.columns(
-        [1, 1]
-    )
+    col1, col2 = st.columns(2)
 
-    with col_img:
+    # Uploaded Image
+
+    with col1:
 
         st.image(
             image,
             caption=(
                 "ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರ"
                 if is_kannada
-                else "Uploaded Mushroom Image"
+                else
+                "Uploaded Image"
             ),
             use_container_width=True
         )
 
-    with col_result:
+    # Resize Image
 
-        with st.spinner(
-            "AI ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತಿದೆ..."
-            if is_kannada
-            else "AI is analyzing the image..."
-        ):
+    image_resized = image.resize((224, 224))
 
-            model = load_mushroom_model()
+    # Normalize
 
-            img = image.resize(
-                (224, 224)
+    image_array = np.array(image_resized) / 255.0
+
+    # Add batch dimension
+
+    image_array = np.expand_dims(image_array, axis=0)
+
+    # Prediction
+
+    predictions = model.predict(
+        image_array,
+        verbose=0
+    )
+
+    predicted_index = np.argmax(predictions[0])
+
+    predicted_class = class_names[predicted_index]
+
+    confidence = float(
+        predictions[0][predicted_index]
+    ) * 100
+
+    # Display name
+
+    if is_kannada:
+
+        display_name = kannada_names[predicted_class]
+
+    else:
+
+        display_name = predicted_class
+
+    # ==================================================
+    # RESULT
+    # ==================================================
+
+    with col2:
+
+        if is_kannada:
+
+            st.markdown(
+                f"""
+                <div class="result-card">
+                    <h2>🍄 {display_name}</h2>
+                    <h3>ವಿಶ್ವಾಸ ಮಟ್ಟ: {confidence:.2f}%</h3>
+                    <p>
+                    ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರದ ಆಧಾರದ ಮೇಲೆ AI ನೀಡಿದ ಫಲಿತಾಂಶ.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-            img_array = (
-                np.array(img) / 255.0
+        else:
+
+            st.markdown(
+                f"""
+                <div class="result-card">
+                    <h2>🍄 {display_name}</h2>
+                    <h3>Confidence: {confidence:.2f}%</h3>
+                    <p>
+                    AI prediction based on the uploaded image.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-            img_array = np.expand_dims(
-                img_array,
-                axis=0
-            )
+    # ==================================================
+    # DISEASE-SPECIFIC FARMER ADVICE
+    # ==================================================
 
-            predictions = model.predict(
-                img_array,
-                verbose=0
-            )
+    if is_kannada:
 
-            predicted_index = int(
-                np.argmax(
-                    predictions[0]
-                )
-            )
+        advice = advice_kannada[predicted_class]
 
-            confidence = (
-                float(
-                    predictions[0][predicted_index]
-                ) * 100
-            )
+    else:
 
-            predicted_class = class_names[
-                predicted_index
-            ]
+        advice = advice_english[predicted_class]
 
-        kannada_names = {
+    st.markdown(
+        f"""
+        <div class="advice-card">
+            <h2>{advice["title"]}</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-            "Healthy":
-                "ಆರೋಗ್ಯಕರ",
-
-            "Bacterial Blotch":
-                "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್",
-
-            "Dry Bubble":
-                "ಡ್ರೈ ಬಬಲ್",
-
-            "Cobweb":
-                "ಕಾಬ್‌ವೆಬ್",
-
-            "Wet Bubble":
-                "ವೆಟ್ ಬಬಲ್"
-        }
-
-        display_name = (
-            kannada_names[predicted_class]
-            if is_kannada
-            else predicted_class
-        )
+    for point in advice["points"]:
 
         st.markdown(
-            f"""
-<div class="result-box">
-
-<div class="result-title">
-{result_title}
-</div>
-
-<div style="
-font-size:35px;
-margin:15px;
-">
-🍄
-</div>
-
-<div style="
-font-size:24px;
-font-weight:800;
-color:#064e3b;
-">
-{display_name}
-</div>
-
-<div class="confidence">
-{confidence_text}: {confidence:.2f}%
-</div>
-
-</div>
-""",
-            unsafe_allow_html=True
+            f"### 💡 {point}"
         )
 
+    # Important disclaimer
 
-# =========================================================
+    if is_kannada:
+
+        st.info(
+            "⚠️ ಈ ವ್ಯವಸ್ಥೆಯು AI ಆಧಾರಿತ ಪ್ರಾಥಮಿಕ ಮಾರ್ಗದರ್ಶನವನ್ನು ನೀಡುತ್ತದೆ. "
+            "ಗಂಭೀರ ಸಮಸ್ಯೆಗಳಿದ್ದರೆ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+        )
+
+    else:
+
+        st.info(
+            "⚠️ This system provides AI-based preliminary guidance. "
+            "For serious crop problems, consult an agricultural expert."
+        )
+
+# ==================================================
 # SUPPORTED DISEASES
-# =========================================================
+# ==================================================
 
-st.markdown(
-    f'<div class="section-title">{disease_title}</div>',
-    unsafe_allow_html=True
-)
+if is_kannada:
 
-disease_icons = [
-    "🍄",
-    "🟠",
-    "🟤",
-    "⚪",
-    "🔵"
+    st.markdown(
+        '<div class="section-title">🍄 ಪತ್ತೆ ಮಾಡಬಹುದಾದ ರೋಗಗಳು</div>',
+        unsafe_allow_html=True
+    )
+
+else:
+
+    st.markdown(
+        '<div class="section-title">🍄 Supported Diseases</div>',
+        unsafe_allow_html=True
+    )
+
+disease_cols = st.columns(5)
+
+disease_emojis = [
+    "🌱",
+    "🦠",
+    "🫧",
+    "🕸️",
+    "💧"
 ]
 
-d1, d2, d3, d4, d5 = st.columns(5)
+for i, disease in enumerate(class_names):
 
-for col, icon, disease in zip(
-    [d1, d2, d3, d4, d5],
-    disease_icons,
-    disease_names
-):
+    if is_kannada:
 
-    with col:
+        name = kannada_names[disease]
+
+    else:
+
+        name = disease
+
+    with disease_cols[i]:
 
         st.markdown(
             f"""
-<div class="disease-card">
-
-<div class="disease-icon">
-{icon}
-</div>
-
-<div class="disease-name">
-{disease[0]}
-</div>
-
-<div class="disease-description">
-{disease[1]}
-</div>
-
-</div>
-""",
+            <div class="disease-card">
+                <h2>{disease_emojis[i]}</h2>
+                <b>{name}</b>
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
-
-# =========================================================
+# ==================================================
 # HOW IT WORKS
-# =========================================================
+# ==================================================
 
-st.markdown(
-    f'<div class="section-title">{how_title}</div>',
-    unsafe_allow_html=True
-)
+if is_kannada:
 
-s1, s2, s3, s4 = st.columns(4)
+    st.markdown(
+        '<div class="section-title">⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?</div>',
+        unsafe_allow_html=True
+    )
 
-for col, step in zip(
-    [s1, s2, s3, s4],
-    steps
-):
+else:
 
-    with col:
+    st.markdown(
+        '<div class="section-title">⚙️ How It Works</div>',
+        unsafe_allow_html=True
+    )
 
-        st.markdown(
-            f"""
-<div class="step-card">
+c1, c2, c3 = st.columns(3)
 
-<div class="step-number">
-{step[0]}
-</div>
+# Step 1
 
-<div class="step-icon">
-{step[1]}
-</div>
+with c1:
 
-<div class="step-name">
-{step[2]}
-</div>
+    if is_kannada:
 
-</div>
-""",
-            unsafe_allow_html=True
-        )
+        st.markdown("""
+        <div class="card">
+            <h2>1️⃣</h2>
+            <h3>ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</h3>
+            <p>ಅಣಬೆಯ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
+    else:
 
-# =========================================================
-# FARMER SUPPORT
-# =========================================================
+        st.markdown("""
+        <div class="card">
+            <h2>1️⃣</h2>
+            <h3>Upload Image</h3>
+            <p>Upload a clear image of the mushroom.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-st.markdown(
-    f"""
-<div class="farmer-box">
+# Step 2
 
-<h2>{farmer_title}</h2>
+with c2:
 
-<p>
-{farmer_text}
-</p>
+    if is_kannada:
 
-<p>
-🌱 {"ಸರಳ ಬಳಕೆ" if is_kannada else "Simple interface"}
-&nbsp; • &nbsp;
+        st.markdown("""
+        <div class="card">
+            <h2>2️⃣</h2>
+            <h3>AI ವಿಶ್ಲೇಷಣೆ</h3>
+            <p>MobileNetV2 ಮಾದರಿಯು ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-📱 {"ಮೊಬೈಲ್ ಸ್ನೇಹಿ" if is_kannada else "Mobile friendly"}
-&nbsp; • &nbsp;
+    else:
 
-🌐 {"ಕನ್ನಡ ಮತ್ತು English" if is_kannada else "English & Kannada"}
-&nbsp; • &nbsp;
+        st.markdown("""
+        <div class="card">
+            <h2>2️⃣</h2>
+            <h3>AI Analysis</h3>
+            <p>MobileNetV2 analyzes the uploaded image.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-🤖 {"AI ಆಧಾರಿತ" if is_kannada else "AI powered"}
-</p>
+# Step 3
 
-</div>
-""",
-    unsafe_allow_html=True
-)
+with c3:
 
+    if is_kannada:
 
-# =========================================================
+        st.markdown("""
+        <div class="card">
+            <h2>3️⃣</h2>
+            <h3>ಫಲಿತಾಂಶ ಮತ್ತು ಸಲಹೆ</h3>
+            <p>ರೋಗದ ಫಲಿತಾಂಶ ಮತ್ತು ರೈತ ಸಲಹೆ ಪಡೆಯಿರಿ.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    else:
+
+        st.markdown("""
+        <div class="card">
+            <h2>3️⃣</h2>
+            <h3>Result & Advice</h3>
+            <p>Get the predicted disease and farmer guidance.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==================================================
 # FOOTER
-# =========================================================
+# ==================================================
 
-footer_warning = (
-    "⚠️ AI ಫಲಿತಾಂಶಗಳು ಮಾಹಿತಿ ಉದ್ದೇಶಕ್ಕಾಗಿ ಮಾತ್ರ. "
-    "ಪ್ರಮುಖ ಬೆಳೆ ನಿರ್ಧಾರಗಳಿಗಾಗಿ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
-    if is_kannada
-    else
-    "⚠️ AI predictions are for informational purposes. "
-    "For important crop decisions, consult an agricultural expert."
-)
-
-st.markdown(
-    f"""
+st.markdown("""
 <div class="footer">
-
-🍄 <b>Mushroom AI Assistant</b>
-
-<br>
-
-{"AI ಆಧಾರಿತ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರ ಸಹಾಯ"
- if is_kannada
- else
- "AI-based mushroom disease detection and farmer support"}
-
-<br><br>
-
-{footer_warning}
-
+    🍄 AI Based Mushroom Disease Detection System<br>
+    Powered by MobileNetV2 & Deep Learning
 </div>
-""",
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
