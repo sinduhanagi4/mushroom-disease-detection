@@ -1,9 +1,8 @@
 import streamlit as st
 
-# --------------------------------------------------
-# PAGE CONFIGURATION
-# --------------------------------------------------
-
+# ---------------------------------------------------------
+# PAGE SETTINGS
+# ---------------------------------------------------------
 st.set_page_config(
     page_title="Mushroom AI Assistant",
     page_icon="🍄",
@@ -11,34 +10,39 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --------------------------------------------------
-# CUSTOM CSS
-# --------------------------------------------------
-
+# ---------------------------------------------------------
+# CUSTOM DESIGN
+# ---------------------------------------------------------
 st.markdown("""
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-html, body, [class*="css"] {
+* {
     font-family: 'Poppins', sans-serif;
 }
 
-/* Main background */
 .stApp {
     background:
-        linear-gradient(135deg, #f1f8e9 0%, #ffffff 45%, #e8f5e9 100%);
+        radial-gradient(circle at 10% 10%, #dcfce7 0%, transparent 28%),
+        radial-gradient(circle at 90% 20%, #d1fae5 0%, transparent 25%),
+        linear-gradient(135deg, #f0fdf4 0%, #ffffff 45%, #ecfdf5 100%);
 }
 
-/* Header */
+/* Remove top spacing */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* HERO */
 .hero {
-    background: linear-gradient(135deg, #1b5e20, #43a047, #81c784);
-    padding: 45px 30px;
-    border-radius: 25px;
-    text-align: center;
+    background: linear-gradient(135deg, #064e3b, #047857, #10b981);
+    padding: 45px 40px;
+    border-radius: 28px;
     color: white;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(46, 125, 50, 0.25);
+    box-shadow: 0 15px 40px rgba(5, 150, 105, 0.25);
+    margin-bottom: 25px;
 }
 
 .hero h1 {
@@ -49,186 +53,349 @@ html, body, [class*="css"] {
 
 .hero p {
     font-size: 18px;
-    margin: 5px;
+    opacity: 0.95;
+    margin-bottom: 5px;
 }
 
-/* Section title */
+.badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* SECTION TITLE */
 .section-title {
-    color: #1b5e20;
     font-size: 28px;
     font-weight: 700;
+    color: #064e3b;
     margin-top: 25px;
     margin-bottom: 15px;
 }
 
-/* Feature cards */
+/* DASHBOARD CARDS */
 .card {
-    background: white;
+    background: rgba(255,255,255,0.9);
     padding: 25px;
-    border-radius: 20px;
-    min-height: 170px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    border: 1px solid #e8f5e9;
+    border-radius: 22px;
+    min-height: 175px;
+    border: 1px solid #d1fae5;
+    box-shadow: 0 8px 25px rgba(6, 78, 59, 0.08);
+    transition: all 0.25s ease;
 }
 
-.card h3 {
-    color: #2e7d32;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(6, 78, 59, 0.15);
+}
+
+.card-icon {
+    font-size: 38px;
     margin-bottom: 10px;
 }
 
+.card h3 {
+    color: #065f46;
+    margin-bottom: 8px;
+}
+
 .card p {
-    color: #555;
+    color: #4b5563;
+    font-size: 14px;
     line-height: 1.6;
 }
 
-/* Footer */
-.footer {
-    margin-top: 40px;
-    padding: 20px;
+/* DISEASE CARDS */
+.disease {
+    background: white;
+    padding: 18px;
+    border-radius: 18px;
     text-align: center;
-    color: #666;
-    border-top: 1px solid #c8e6c9;
+    border: 1px solid #d1fae5;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+}
+
+.disease-icon {
+    font-size: 32px;
+}
+
+.disease h4 {
+    color: #065f46;
+    margin: 8px 0 3px 0;
+}
+
+.disease p {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* HOW IT WORKS */
+.step {
+    background: linear-gradient(135deg, #ffffff, #f0fdf4);
+    padding: 22px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid #bbf7d0;
+}
+
+.step-number {
+    background: #059669;
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* FARMER SECTION */
+.farmer-box {
+    background: linear-gradient(135deg, #14532d, #166534);
+    color: white;
+    padding: 30px;
+    border-radius: 25px;
+    margin-top: 25px;
+    box-shadow: 0 12px 30px rgba(20,83,45,0.2);
+}
+
+.farmer-box h2 {
+    color: white;
+}
+
+.farmer-box p {
+    color: #dcfce7;
+    line-height: 1.7;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    color: #6b7280;
+    padding: 30px 10px 10px;
+    font-size: 13px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
+# ---------------------------------------------------------
 # HERO SECTION
-# --------------------------------------------------
-
+# ---------------------------------------------------------
 st.markdown("""
 <div class="hero">
 
+<div class="badge">🌱 AI Powered Agriculture • Smart Farming</div>
+
 <h1>🍄 Mushroom AI Assistant</h1>
 
-<p>Smart Mushroom Disease Detection</p>
+<p><b>Smart Mushroom Disease Detection & Farmer Support</b></p>
 
-<p>🌱 AI-powered support for mushroom farmers</p>
+<p>
+Use Artificial Intelligence to identify common mushroom diseases
+and receive simple, farmer-friendly guidance.
+</p>
 
 </div>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# LANGUAGE
-# --------------------------------------------------
-
-language = st.radio(
-    "🌐 Choose Language / ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    ["English", "ಕನ್ನಡ"],
-    horizontal=True
-)
-
-st.markdown("---")
-
-# --------------------------------------------------
-# WELCOME MESSAGE
-# --------------------------------------------------
-
-if language == "English":
-
-    st.markdown("""
-    <div style="
-        background:white;
-        padding:25px;
-        border-radius:20px;
-        box-shadow:0 5px 18px rgba(0,0,0,0.06);
-        text-align:center;
-    ">
-
-    <h2 style="color:#2e7d32;">🌱 Welcome, Farmer!</h2>
-
-    <p style="font-size:17px;color:#555;">
-    Upload a mushroom image to detect possible diseases
-    and receive useful farming guidance.
-    </p>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-else:
-
-    st.markdown("""
-    <div style="
-        background:white;
-        padding:25px;
-        border-radius:20px;
-        box-shadow:0 5px 18px rgba(0,0,0,0.06);
-        text-align:center;
-    ">
-
-    <h2 style="color:#2e7d32;">🌱 ರೈತರಿಗೆ ಸ್ವಾಗತ!</h2>
-
-    <p style="font-size:17px;color:#555;">
-    ಅಣಬೆ ಚಿತ್ರದ ಮೂಲಕ ಸಂಭವನೀಯ ರೋಗವನ್ನು ಗುರುತಿಸಿ
-    ಮತ್ತು ಉಪಯುಕ್ತ ಕೃಷಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ.
-    </p>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-# --------------------------------------------------
-# FEATURE CARDS
-# --------------------------------------------------
-
+# ---------------------------------------------------------
+# DASHBOARD
+# ---------------------------------------------------------
 st.markdown(
-    '<div class="section-title">🌟 What You Can Do</div>',
+    '<div class="section-title">🌿 Smart Farming Dashboard</div>',
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown("""
     <div class="card">
-    <h3>🔬 AI Detection</h3>
-    <p>
-    Upload a mushroom image and use our trained
-    deep-learning model to identify the possible condition.
-    </p>
+        <div class="card-icon">🔬</div>
+        <h3>AI Disease Detection</h3>
+        <p>
+        Upload a mushroom image and our deep learning model
+        analyzes it for possible diseases.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("""
     <div class="card">
-    <h3>🌱 Farmer Guidance</h3>
-    <p>
-    Get simple information and practical guidance
-    related to the detected mushroom condition.
-    </p>
+        <div class="card-icon">🌱</div>
+        <h3>Farmer Guidance</h3>
+        <p>
+        Get easy-to-understand information and practical
+        guidance related to mushroom health.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
 with col3:
     st.markdown("""
     <div class="card">
-    <h3>💬 AI Assistant</h3>
-    <p>
-    Ask questions about mushroom diseases,
-    cultivation, prevention and basic care.
-    </p>
+        <div class="card-icon">💬</div>
+        <h3>AI Farmer Assistant</h3>
+        <p>
+        Ask questions about mushroom diseases, symptoms,
+        prevention and cultivation.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# FOOTER
-# --------------------------------------------------
+with col4:
+    st.markdown("""
+    <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Disease Insights</h3>
+        <p>
+        Understand detected diseases through simple
+        explanations and visual information.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# DETECTION HIGHLIGHT
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="section-title">📸 Detect Mushroom Disease</div>',
+    unsafe_allow_html=True
+)
 
 st.markdown("""
-<div class="footer">
+<div class="farmer-box">
 
-🍄 <b>Mushroom AI Assistant</b>
+<h2>🔍 Start Your AI Diagnosis</h2>
 
-<br>
-
-AI-Based Mushroom Disease Detection Using Image Processing and Deep Learning
-
-<br><br>
-
-⚠️ AI predictions are for assistance and should be confirmed
-with a qualified agricultural expert.
+<p>
+Upload a clear photograph of your mushroom.
+The AI system will analyze the image and provide
+a predicted disease class with confidence.
+</p>
 
 </div>
 """, unsafe_allow_html=True)
 
+# ---------------------------------------------------------
+# SUPPORTED DISEASES
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="section-title">🦠 Supported Mushroom Conditions</div>',
+    unsafe_allow_html=True
+)
+
+d1, d2, d3, d4, d5 = st.columns(5)
+
+diseases = [
+    ("🍄", "Healthy", "No disease detected"),
+    ("🟠", "Bacterial Blotch", "Bacterial infection"),
+    ("🟤", "Dry Bubble", "Fungal disease"),
+    ("⚪", "Cobweb", "Fungal infection"),
+    ("🔵", "Wet Bubble", "Fungal disease")
+]
+
+for col, disease in zip([d1, d2, d3, d4, d5], diseases):
+    with col:
+        st.markdown(f"""
+        <div class="disease">
+            <div class="disease-icon">{disease[0]}</div>
+            <h4>{disease[1]}</h4>
+            <p>{disease[2]}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# HOW IT WORKS
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="section-title">⚡ How It Works</div>',
+    unsafe_allow_html=True
+)
+
+s1, s2, s3, s4 = st.columns(4)
+
+steps = [
+    ("1", "📷", "Upload Image"),
+    ("2", "🤖", "AI Analysis"),
+    ("3", "🔬", "Disease Result"),
+    ("4", "🌱", "Farmer Guidance")
+]
+
+for col, step in zip([s1, s2, s3, s4], steps):
+    with col:
+        st.markdown(f"""
+        <div class="step">
+            <div class="step-number">{step[0]}</div>
+            <div style="font-size:30px; margin:12px;">{step[1]}</div>
+            <b>{step[2]}</b>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# FARMER BENEFITS
+# ---------------------------------------------------------
+st.markdown("""
+<div class="farmer-box">
+
+<h2>👨‍🌾 Built for Mushroom Farmers</h2>
+
+<p>
+Early identification of visible disease symptoms can help farmers
+take timely action. This system provides an AI-based prediction
+and easy-to-understand information in one place.
+</p>
+
+<p>
+🌱 Simple interface &nbsp; • &nbsp;
+📱 Mobile friendly &nbsp; • &nbsp;
+🌐 English & Kannada &nbsp; • &nbsp;
+🤖 AI powered
+</p>
+
+</div>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# LANGUAGE
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="section-title">🌐 Choose Your Language</div>',
+    unsafe_allow_html=True
+)
+
+language = st.radio(
+    "Language",
+    ["English", "ಕನ್ನಡ"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
+
+if language == "ಕನ್ನಡ":
+    st.info(
+        "🍄 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರಿಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುವ "
+        "AI ಸಹಾಯಕಕ್ಕೆ ಸ್ವಾಗತ!"
+    )
+else:
+    st.info(
+        "🍄 Welcome to your AI-powered mushroom disease "
+        "detection and farmer support system!"
+    )
+
+# ---------------------------------------------------------
+# FOOTER
+# ---------------------------------------------------------
+st.markdown("""
+<div class="footer">
+    🍄 <b>Mushroom AI Assistant</b><br>
+    AI-based mushroom disease detection and farmer support<br><br>
+    ⚠️ AI predictions are for informational purposes.
+    For important crop decisions, consult an agricultural expert.
+</div>
+""", unsafe_allow_html=True)
