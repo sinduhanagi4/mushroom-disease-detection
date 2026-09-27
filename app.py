@@ -667,71 +667,100 @@ with advice_col2:
 
 # ============================================================
 # SUPPORTED DISEASES
-# ============================================================
 
 st.divider()
 
-
 if is_kannada:
-
-    st.markdown(
-        '<div class="section-title">'
-        '🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು'
-        '</div>',
-        unsafe_allow_html=True
+    st.markdown("## 🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ಮಶ್ರೂಮ್ ರೋಗಗಳು")
+    st.write(
+        "ಈ ಅಪ್ಲಿಕೇಶನ್ ಕೆಳಗಿನ ಐದು ವರ್ಗಗಳನ್ನು ಗುರುತಿಸಲು ತರಬೇತಿ ಪಡೆದಿದೆ."
     )
-
 else:
-
-    st.markdown(
-        '<div class="section-title">'
-        '🦠 Supported Diseases'
-        '</div>',
-        unsafe_allow_html=True
+    st.markdown("## 🦠 Supported Mushroom Diseases")
+    st.write(
+        "This application is trained to identify the following five classes."
     )
 
+disease_info = {
+    "Healthy": {
+        "icon": "🍄",
+        "en": "Healthy mushroom",
+        "kn": "ಆರೋಗ್ಯಕರ ಮಶ್ರೂಮ್"
+    },
+    "Bacterial Blotch": {
+        "icon": "🦠",
+        "en": "Bacterial disease",
+        "kn": "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ರೋಗ"
+    },
+    "Dry Bubble": {
+        "icon": "⚪",
+        "en": "Dry Bubble disease",
+        "kn": "ಡ್ರೈ ಬಬಲ್ ರೋಗ"
+    },
+    "Cobweb": {
+        "icon": "🕸️",
+        "en": "Cobweb disease",
+        "kn": "ಕಾಬ್‌ವೆಬ್ ರೋಗ"
+    },
+    "Wet Bubble": {
+        "icon": "💧",
+        "en": "Wet Bubble disease",
+        "kn": "ವೆಟ್ ಬಬಲ್ ರೋಗ"
+    }
+}
 
 d1, d2, d3, d4, d5 = st.columns(5)
 
+disease_columns = [d1, d2, d3, d4, d5]
 
-disease_columns = [
-    d1,
-    d2,
-    d3,
-    d4,
-    d5
-]
+for column, disease in zip(disease_columns, class_names):
 
-
-disease_icons = [
-    "🍄",
-    "🦠",
-    "⚪",
-    "🕸️",
-    "💧"
-]
-
-
-for column, disease, icon in zip(
-    disease_columns,
-    class_names,
-    disease_icons
-):
+    info = disease_info[disease]
 
     with column:
 
-        name = (
+        display_name = (
             kannada_names[disease]
             if is_kannada
             else disease
         )
 
-        st.info(
-            f"{icon} **{name}**"
+        description = (
+            info["kn"]
+            if is_kannada
+            else info["en"]
         )
 
+        if disease == "Healthy":
+            st.success(
+                f"""
+                {info["icon"]}
 
-# ============================================================
+                ### {display_name}
+
+                {description}
+                """
+            )
+
+        else:
+            st.warning(
+                f"""
+                {info["icon"]}
+
+                ### {display_name}
+
+                {description}
+                """
+            )
+
+st.info(
+    "💡 **Tip:** Upload a clear mushroom image above to check its condition."
+    if not is_kannada
+    else
+    "💡 **ಸಲಹೆ:** ಮಶ್ರೂಮ್‌ನ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಮೇಲಿನ ವಿಭಾಗದಲ್ಲಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
+)
+
+
 # HOW IT WORKS
 # ============================================================
 
