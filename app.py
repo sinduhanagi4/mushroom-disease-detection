@@ -34,13 +34,13 @@ st.markdown("""
     linear-gradient(135deg, #f0fdf4, #ecfdf5);
 }
 
-/* Main container */
 .block-container {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
 }
 
-/* Hero */
+/* HERO */
+
 .hero {
     background: linear-gradient(135deg, #064e3b, #047857, #10b981);
     padding: 42px 35px;
@@ -71,7 +71,8 @@ st.markdown("""
     opacity: 0.95;
 }
 
-/* Section title */
+/* SECTION */
+
 .section-title {
     color: #064e3b;
     font-size: 27px;
@@ -80,7 +81,8 @@ st.markdown("""
     margin-bottom: 15px;
 }
 
-/* Cards */
+/* CARDS */
+
 .card {
     background: white;
     padding: 24px;
@@ -88,7 +90,6 @@ st.markdown("""
     margin-bottom: 18px;
     box-shadow: 0 7px 22px rgba(0,0,0,0.08);
     border: 1px solid #d1fae5;
-    transition: 0.3s;
 }
 
 .card:hover {
@@ -109,7 +110,8 @@ st.markdown("""
     color: #4b5563;
 }
 
-/* Detection box */
+/* DETECTION */
+
 .detect-box {
     background: white;
     padding: 28px;
@@ -118,13 +120,15 @@ st.markdown("""
     border: 1px solid #bbf7d0;
 }
 
-/* Result */
+/* RESULT */
+
 .result-box {
     background: linear-gradient(135deg, #ecfdf5, #d1fae5);
     border-left: 7px solid #059669;
-    padding: 25px;
-    border-radius: 18px;
+    padding: 28px;
+    border-radius: 20px;
     margin-top: 20px;
+    box-shadow: 0 7px 20px rgba(0,0,0,0.06);
 }
 
 .result-title {
@@ -133,7 +137,70 @@ st.markdown("""
     font-weight: 800;
 }
 
-/* Advice */
+.result-disease {
+    color: #064e3b;
+    font-size: 32px;
+    font-weight: 800;
+    margin-top: 8px;
+}
+
+.status-healthy {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.status-disease {
+    display: inline-block;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* CONFIDENCE */
+
+.confidence-box {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 18px;
+    border: 1px solid #d1fae5;
+}
+
+.confidence-number {
+    font-size: 25px;
+    font-weight: 800;
+    color: #047857;
+}
+
+.confidence-track {
+    width: 100%;
+    height: 15px;
+    background: #d1fae5;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.confidence-fill {
+    height: 15px;
+    background: linear-gradient(
+        90deg,
+        #10b981,
+        #059669
+    );
+    border-radius: 20px;
+}
+
+/* ADVICE */
+
 .advice-box {
     background: #fff7ed;
     border-left: 6px solid #f97316;
@@ -142,7 +209,16 @@ st.markdown("""
     margin-top: 15px;
 }
 
-/* Chatbot */
+.warning-box {
+    background: #fef2f2;
+    border-left: 6px solid #ef4444;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 15px;
+}
+
+/* CHAT */
+
 .chat-container {
     background: white;
     padding: 25px;
@@ -167,11 +243,26 @@ st.markdown("""
 .quick-title {
     color: #065f46;
     font-weight: 700;
-    margin-top: 10px;
+    margin-top: 18px;
     margin-bottom: 10px;
 }
 
-/* Step cards */
+.category-box {
+    background: #f0fdf4;
+    padding: 15px;
+    border-radius: 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #bbf7d0;
+}
+
+.category-title {
+    color: #047857;
+    font-weight: 700;
+}
+
+/* STEPS */
+
 .step {
     background: white;
     padding: 22px;
@@ -195,7 +286,8 @@ st.markdown("""
     font-size: 18px;
 }
 
-/* Footer */
+/* FOOTER */
+
 .footer {
     text-align: center;
     padding: 30px 10px 10px;
@@ -255,16 +347,10 @@ st.markdown(f"""
 # DASHBOARD
 # --------------------------------------------------
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">🌿 Smart Farming Dashboard</div>',
-        unsafe_allow_html=True
-    )
+st.markdown(
+    '<div class="section-title">🌿 Smart Farming Dashboard</div>',
+    unsafe_allow_html=True
+)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -311,7 +397,9 @@ with col4:
 
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("mushroom_disease_mobilenetv2.keras")
+    return tf.keras.models.load_model(
+        "mushroom_disease_mobilenetv2.keras"
+    )
 
 
 model = load_model()
@@ -371,18 +459,15 @@ advice = {
 # DETECTION
 # --------------------------------------------------
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">🔬 Mushroom Disease Detection</div>',
-        unsafe_allow_html=True
-    )
+st.markdown(
+    '<div class="section-title">🔬 Mushroom Disease Detection</div>',
+    unsafe_allow_html=True
+)
 
-st.markdown('<div class="detect-box">', unsafe_allow_html=True)
+st.markdown(
+    '<div class="detect-box">',
+    unsafe_allow_html=True
+)
 
 if is_kannada:
     st.write("📷 ಮಶ್ರೂಮ್‌ನ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.")
@@ -395,21 +480,56 @@ uploaded_file = st.file_uploader(
     label_visibility="collapsed"
 )
 
+
 if uploaded_file is not None:
 
-    image = Image.open(uploaded_file).convert("RGB")
+    image = Image.open(
+        uploaded_file
+    ).convert("RGB")
 
-    st.image(image, caption="Uploaded Mushroom", width=350)
+    st.image(
+        image,
+        caption="Uploaded Mushroom",
+        width=350
+    )
 
-    img = image.resize((224, 224))
+    # Resize for model
+
+    img = image.resize(
+        (224, 224)
+    )
+
+    # Normalize
+
     img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
 
-    prediction = model.predict(img_array, verbose=0)
+    # Add batch dimension
 
-    predicted_index = np.argmax(prediction[0])
-    predicted_class = class_names[predicted_index]
-    confidence = float(prediction[0][predicted_index]) * 100
+    img_array = np.expand_dims(
+        img_array,
+        axis=0
+    )
+
+    # Prediction
+
+    prediction = model.predict(
+        img_array,
+        verbose=0
+    )
+
+    predicted_index = np.argmax(
+        prediction[0]
+    )
+
+    predicted_class = class_names[
+        predicted_index
+    ]
+
+    confidence = (
+        float(
+            prediction[0][predicted_index]
+        ) * 100
+    )
 
     display_name = (
         kannada_names[predicted_class]
@@ -417,54 +537,193 @@ if uploaded_file is not None:
         else predicted_class
     )
 
+
+    # --------------------------------------------------
+    # RESULT STATUS
+    # --------------------------------------------------
+
+    if predicted_class == "Healthy":
+
+        status_html = (
+            '<span class="status-healthy">'
+            '🟢 Healthy'
+            '</span>'
+        )
+
+        status_kn = "🟢 ಆರೋಗ್ಯಕರ"
+
+    else:
+
+        status_html = (
+            '<span class="status-disease">'
+            '🔴 Disease Detected'
+            '</span>'
+        )
+
+        status_kn = "🔴 ರೋಗ ಪತ್ತೆಯಾಗಿದೆ"
+
+
+    # --------------------------------------------------
+    # MAIN RESULT
+    # --------------------------------------------------
+
     st.markdown(f"""
     <div class="result-box">
 
-    <div class="result-title">
-    {'🔍 ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ' if is_kannada else '🔍 Detection Result'}
-    </div>
+        <div class="result-title">
+        {'🔍 ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ' if is_kannada else '🔍 Detection Result'}
+        </div>
 
-    <h2>{display_name}</h2>
+        <div class="result-disease">
+        {display_name}
+        </div>
 
-    <p>
-    {'Confidence' if not is_kannada else 'ವಿಶ್ವಾಸ ಮಟ್ಟ'}:
-    <b>{confidence:.2f}%</b>
-    </p>
+        {
+            status_kn
+            if is_kannada
+            else status_html
+        }
 
     </div>
     """, unsafe_allow_html=True)
 
-    advice_text = advice[predicted_class]["kn" if is_kannada else "en"]
+
+    # --------------------------------------------------
+    # CONFIDENCE BAR
+    # --------------------------------------------------
+
+    confidence_width = min(
+        max(confidence, 0),
+        100
+    )
 
     st.markdown(f"""
-    <div class="advice-box">
+    <div class="confidence-box">
 
-    <b>
-    {'🌱 ರೈತ ಸಲಹೆ' if is_kannada else '🌱 Farmer Advice'}
-    </b>
+        <div>
+        {'📊 ವಿಶ್ವಾಸ ಮಟ್ಟ' if is_kannada else '📊 Prediction Confidence'}
+        </div>
 
-    <p>{advice_text}</p>
+        <div class="confidence-number">
+        {confidence:.2f}%
+        </div>
+
+        <div class="confidence-track">
+
+            <div
+            class="confidence-fill"
+            style="width:{confidence_width}%;">
+            </div>
+
+        </div>
 
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+
+    # --------------------------------------------------
+    # RECOMMENDED ACTION
+    # --------------------------------------------------
+
+    if predicted_class == "Healthy":
+
+        if is_kannada:
+
+            st.markdown("""
+            <div class="advice-box">
+
+            <b>🌱 ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮ</b>
+
+            <p>
+            ಮಶ್ರೂಮ್ ಆರೋಗ್ಯಕರವಾಗಿ ಕಾಣುತ್ತದೆ.
+            ಉತ್ತಮ ಸ್ವಚ್ಛತೆ, ಸೂಕ್ತ ತೇವಾಂಶ ಮತ್ತು
+            ಗಾಳಿಯ ಹರಿವನ್ನು ಮುಂದುವರಿಸಿ.
+            </p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
+
+            st.markdown("""
+            <div class="advice-box">
+
+            <b>🌱 Recommended Action</b>
+
+            <p>
+            The mushroom appears healthy.
+            Continue good hygiene, suitable
+            moisture and proper ventilation.
+            </p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    else:
+
+        advice_text = advice[
+            predicted_class
+        ][
+            "kn" if is_kannada else "en"
+        ]
+
+        if is_kannada:
+
+            st.markdown(f"""
+            <div class="warning-box">
+
+            <b>⚠️ ರೋಗ ಪತ್ತೆಯಾಗಿದೆ</b>
+
+            <p>
+            ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರದಲ್ಲಿ
+            <b>{display_name}</b> ಎಂದು ಮಾದರಿ
+            ಗುರುತಿಸಿದೆ.
+            </p>
+
+            <p>
+            <b>🌱 ಶಿಫಾರಸು:</b><br>
+            {advice_text}
+            </p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
+
+            st.markdown(f"""
+            <div class="warning-box">
+
+            <b>⚠️ Disease Detected</b>
+
+            <p>
+            The model identified
+            <b>{display_name}</b>
+            in the uploaded image.
+            </p>
+
+            <p>
+            <b>🌱 Recommended Action:</b><br>
+            {advice_text}
+            </p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)
 
 
 # --------------------------------------------------
-# GENERAL FARMER ADVICE
+# FARMER ADVICE
 # --------------------------------------------------
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">🌱 Useful Farmer Advice</div>',
-        unsafe_allow_html=True
-    )
+st.markdown(
+    '<div class="section-title">🌱 Useful Farmer Advice</div>',
+    unsafe_allow_html=True
+)
 
 a1, a2, a3, a4 = st.columns(4)
 
@@ -509,16 +768,10 @@ with a4:
 # SUPPORTED DISEASES
 # --------------------------------------------------
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">🦠 Supported Diseases</div>',
-        unsafe_allow_html=True
-    )
+st.markdown(
+    '<div class="section-title">🦠 Supported Diseases</div>',
+    unsafe_allow_html=True
+)
 
 d1, d2, d3, d4, d5 = st.columns(5)
 
@@ -534,13 +787,26 @@ for col, (icon, name) in zip(
     [d1, d2, d3, d4, d5],
     diseases
 ):
+
     with col:
-        display_name = kannada_names[name] if is_kannada else name
+
+        display_name = (
+            kannada_names[name]
+            if is_kannada
+            else name
+        )
 
         st.markdown(f"""
         <div class="card" style="text-align:center;">
-        <div class="card-icon">{icon}</div>
-        <b>{display_name}</b>
+
+        <div class="card-icon">
+        {icon}
+        </div>
+
+        <b>
+        {display_name}
+        </b>
+
         </div>
         """, unsafe_allow_html=True)
 
@@ -549,86 +815,101 @@ for col, (icon, name) in zip(
 # HOW IT WORKS
 # --------------------------------------------------
 
-if is_kannada:
-    st.markdown(
-        '<div class="section-title">⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">⚙️ How It Works</div>',
-        unsafe_allow_html=True
-    )
+st.markdown(
+    '<div class="section-title">⚙️ How It Works</div>',
+    unsafe_allow_html=True
+)
 
 h1, h2, h3 = st.columns(3)
 
 with h1:
     st.markdown("""
     <div class="step">
+
     <div class="step-number">1</div>
+
     <h3>📷 Upload</h3>
-    <p>Upload a mushroom image.</p>
+
+    <p>
+    Upload a mushroom image.
+    </p>
+
     </div>
     """, unsafe_allow_html=True)
 
 with h2:
     st.markdown("""
     <div class="step">
+
     <div class="step-number">2</div>
+
     <h3>🤖 Analyze</h3>
-    <p>MobileNetV2 analyzes the image.</p>
+
+    <p>
+    MobileNetV2 analyzes the image.
+    </p>
+
     </div>
     """, unsafe_allow_html=True)
 
 with h3:
     st.markdown("""
     <div class="step">
+
     <div class="step-number">3</div>
+
     <h3>🌱 Guidance</h3>
-    <p>Receive disease information and farmer advice.</p>
+
+    <p>
+    Receive disease information and farmer advice.
+    </p>
+
     </div>
     """, unsafe_allow_html=True)
 
 
-# --------------------------------------------------
-# STEP 6 — FARMER CHATBOT
-# --------------------------------------------------
+# ==================================================
+# FARMER ASSISTANT
+# ==================================================
+
+st.markdown(
+    '<div class="section-title">💬 AI Farmer Assistant</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="chat-container">',
+    unsafe_allow_html=True
+)
+
 
 if is_kannada:
-    st.markdown(
-        '<div class="section-title">💬 AI Farmer Assistant</div>',
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        '<div class="section-title">💬 AI Farmer Assistant</div>',
-        unsafe_allow_html=True
-    )
 
-st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-
-if is_kannada:
     st.markdown("""
     <div class="chat-welcome">
 
     <h3>👋 ನಮಸ್ಕಾರ ರೈತರೆ!</h3>
 
     <p>
-    ಮಶ್ರೂಮ್ ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಮತ್ತು ಗಾಳಿಯ ಹರಿವಿನ ಬಗ್ಗೆ
-    ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ.
+    ಮಶ್ರೂಮ್ ರೋಗಗಳು, ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆ,
+    ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಮತ್ತು ಗಾಳಿಯ ಹರಿವಿನ
+    ಬಗ್ಗೆ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ.
     </p>
 
     </div>
     """, unsafe_allow_html=True)
+
 else:
+
     st.markdown("""
     <div class="chat-welcome">
 
     <h3>👋 Hello Farmer!</h3>
 
     <p>
-    Ask me about mushroom diseases, hygiene, moisture,
-    ventilation and basic mushroom care.
+    Ask me about mushroom diseases,
+    prevention, hygiene, moisture,
+    ventilation and taking good photos.
     </p>
 
     </div>
@@ -636,70 +917,183 @@ else:
 
 
 # --------------------------------------------------
-# CHAT RESPONSE FUNCTION
+# CHATBOT FUNCTION
 # --------------------------------------------------
 
-def get_chatbot_response(question, kannada):
+def get_chatbot_response(
+    question,
+    kannada
+):
 
     q = question.lower()
 
     if kannada:
 
         if "ಬ್ಯಾಕ್ಟೀರಿಯಲ್" in q or "blotch" in q:
-            return "🦠 ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಕಂಡುಬಂದರೆ ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, ಹೆಚ್ಚುವರಿ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಸುಧಾರಿಸಿ."
+
+            return (
+                "🦠 **ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್:** "
+                "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, "
+                "ಹೆಚ್ಚುವರಿ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ "
+                "ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಸುಧಾರಿಸಿ."
+            )
 
         elif "ಡ್ರೈ ಬಬಲ್" in q:
-            return "⚪ ಡ್ರೈ ಬಬಲ್ ಕಂಡುಬಂದರೆ ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಬೆಳೆಯುವ ಪ್ರದೇಶವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+
+            return (
+                "⚪ **ಡ್ರೈ ಬಬಲ್:** "
+                "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ "
+                "ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಬೆಳೆಯುವ ಪ್ರದೇಶವನ್ನು "
+                "ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            )
 
         elif "ಕಾಬ್" in q or "cobweb" in q:
-            return "🕸️ ಕಾಬ್‌ವೆಬ್ ಕಂಡುಬಂದರೆ ಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
+
+            return (
+                "🕸️ **ಕಾಬ್‌ವೆಬ್:** "
+                "ಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, "
+                "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು "
+                "ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
+            )
 
         elif "ವೆಟ್ ಬಬಲ್" in q:
-            return "💧 ವೆಟ್ ಬಬಲ್ ಕಂಡುಬಂದರೆ ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆ ಹಾಗೂ ತೇವಾಂಶ ನಿಯಂತ್ರಣವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
 
-        elif "ಸ್ವಚ್ಛ" in q or "hygiene" in q:
-            return "🧼 ಮಶ್ರೂಮ್ ಬೆಳೆಯುವ ಕೊಠಡಿ, ಉಪಕರಣಗಳು ಮತ್ತು ಕೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            return (
+                "💧 **ವೆಟ್ ಬಬಲ್:** "
+                "ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ "
+                "ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆ ಹಾಗೂ "
+                "ತೇವಾಂಶ ನಿಯಂತ್ರಣವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+            )
 
-        elif "ತೇವಾಂಶ" in q or "moisture" in q:
-            return "💧 ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಬೆಳೆಯುವ ಪರಿಸರದಲ್ಲಿ ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+        elif "ತಡೆ" in q or "prevent" in q:
 
-        elif "ಗಾಳಿ" in q or "ವಾತಾಯನ" in q or "ventilation" in q:
-            return "🌬️ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಮಶ್ರೂಮ್ ಬೆಳವಣಿಗೆಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ ಮತ್ತು ಕೆಲವು ರೋಗಗಳ ಅಪಾಯವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಸಹಾಯ ಮಾಡಬಹುದು."
+            return (
+                "🌱 **ರೋಗ ತಡೆಗಟ್ಟಲು:** "
+                "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, "
+                "ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ, "
+                "ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಇರಲಿ ಮತ್ತು "
+                "ಮಶ್ರೂಮ್‌ಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+            )
 
-        elif "ರೋಗ" in q or "disease" in q:
-            return "🍄 ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ನಾನು ಐದು ತರಗತಿಗಳಲ್ಲಿ ಒಂದು ರೋಗ ವರ್ಗವನ್ನು ಗುರುತಿಸಲು ಪ್ರಯತ್ನಿಸುತ್ತೇನೆ."
+        elif "ಫೋಟೋ" in q or "ಚಿತ್ರ" in q:
+
+            return (
+                "📷 **ಉತ್ತಮ ಫೋಟೋ:** "
+                "ಉತ್ತಮ ಬೆಳಕಿನಲ್ಲಿ ಸ್ಪಷ್ಟವಾದ ಚಿತ್ರ ತೆಗೆದುಕೊಳ್ಳಿ. "
+                "ಮಶ್ರೂಮ್ ಸಂಪೂರ್ಣವಾಗಿ ಕಾಣುವಂತೆ ಮಾಡಿ ಮತ್ತು "
+                "ಮಸುಕಾದ ಚಿತ್ರಗಳನ್ನು ತಪ್ಪಿಸಿ."
+            )
+
+        elif "ಸ್ವಚ್ಛ" in q:
+
+            return (
+                "🧼 ಬೆಳೆಯುವ ಕೊಠಡಿ, ಉಪಕರಣಗಳು "
+                "ಮತ್ತು ಕೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            )
+
+        elif "ತೇವಾಂಶ" in q:
+
+            return (
+                "💧 ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು "
+                "ತಪ್ಪಿಸಿ ಮತ್ತು ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು "
+                "ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+            )
+
+        elif "ಗಾಳಿ" in q or "ವಾತಾಯನ" in q:
+
+            return (
+                "🌬️ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು "
+                "ಬೆಳೆಯುವ ಪರಿಸರವನ್ನು ಸೂಕ್ತವಾಗಿಡಲು "
+                "ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+            )
 
         else:
-            return "🌱 ಮಶ್ರೂಮ್ ಚಿತ್ರದ ಬಗ್ಗೆ, ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಅಥವಾ ಗಾಳಿಯ ಹರಿವಿನ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+
+            return (
+                "🌱 ರೋಗ, ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆ, "
+                "ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಅಥವಾ "
+                "ಗಾಳಿಯ ಹರಿವಿನ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+            )
 
     else:
 
         if "bacterial" in q or "blotch" in q:
-            return "🦠 For Bacterial Blotch, maintain hygiene, avoid excess surface moisture and improve ventilation."
+
+            return (
+                "🦠 **Bacterial Blotch:** "
+                "Maintain hygiene, avoid excess "
+                "surface moisture and improve ventilation."
+            )
 
         elif "dry bubble" in q:
-            return "⚪ For Dry Bubble, carefully remove affected mushrooms and maintain good growing-room hygiene."
+
+            return (
+                "⚪ **Dry Bubble:** "
+                "Carefully remove affected mushrooms "
+                "and maintain good growing-room hygiene."
+            )
 
         elif "cobweb" in q:
-            return "🕸️ For Cobweb disease, remove affected areas, maintain cleanliness and avoid excessive humidity."
+
+            return (
+                "🕸️ **Cobweb:** "
+                "Remove affected areas, maintain "
+                "cleanliness and avoid excessive humidity."
+            )
 
         elif "wet bubble" in q:
-            return "💧 For Wet Bubble, carefully remove infected material and maintain hygiene and moisture control."
+
+            return (
+                "💧 **Wet Bubble:** "
+                "Carefully remove infected material "
+                "and maintain hygiene and moisture control."
+            )
+
+        elif "prevent" in q:
+
+            return (
+                "🌱 **Disease Prevention:** "
+                "Maintain good hygiene, avoid excessive "
+                "moisture, provide suitable ventilation "
+                "and inspect mushrooms regularly."
+            )
+
+        elif "photo" in q or "picture" in q:
+
+            return (
+                "📷 **Good Mushroom Photo:** "
+                "Use good lighting, keep the mushroom "
+                "clearly visible and avoid blurry images."
+            )
 
         elif "hygiene" in q or "clean" in q:
-            return "🧼 Keep the growing room, tools and hands clean to reduce contamination risks."
+
+            return (
+                "🧼 Keep the growing room, tools "
+                "and hands clean."
+            )
 
         elif "moisture" in q or "humidity" in q:
-            return "💧 Avoid excessive surface moisture and maintain suitable moisture conditions."
+
+            return (
+                "💧 Avoid excessive surface moisture "
+                "and maintain suitable moisture conditions."
+            )
 
         elif "ventilation" in q or "air" in q:
-            return "🌬️ Good air circulation helps maintain a suitable growing environment and can help reduce some disease risks."
 
-        elif "disease" in q:
-            return "🍄 Upload a mushroom image and I will try to identify one of the five supported classes."
+            return (
+                "🌬️ Good air circulation helps "
+                "maintain a suitable growing environment."
+            )
 
         else:
-            return "🌱 Ask me about mushroom diseases, hygiene, moisture, ventilation or mushroom care."
+
+            return (
+                "🌱 Ask me about diseases, prevention, "
+                "hygiene, moisture, ventilation or "
+                "taking a good mushroom photo."
+            )
 
 
 # --------------------------------------------------
@@ -715,39 +1109,45 @@ if is_kannada:
 
     questions = [
         "🦠 ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಎಂದರೇನು?",
+        "⚪ ಡ್ರೈ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+        "🕸️ ಕಾಬ್‌ವೆಬ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+        "💧 ವೆಟ್ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+        "🌱 ರೋಗಗಳನ್ನು ಹೇಗೆ ತಡೆಯುವುದು?",
+        "🧼 ಸ್ವಚ್ಛತೆಯನ್ನು ಹೇಗೆ ಕಾಪಾಡುವುದು?",
         "💧 ತೇವಾಂಶವನ್ನು ಹೇಗೆ ನಿಯಂತ್ರಿಸುವುದು?",
-        "🌬️ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಏಕೆ ಬೇಕು?",
-        "🧼 ಸ್ವಚ್ಛತೆಯನ್ನು ಹೇಗೆ ಕಾಪಾಡುವುದು?"
+        "🌬️ ಗಾಳಿಯ ಹರಿವು ಏಕೆ ಮುಖ್ಯ?",
+        "📷 ಉತ್ತಮ ಫೋಟೋ ಹೇಗೆ ತೆಗೆದುಕೊಳ್ಳುವುದು?"
     ]
 
 else:
 
     questions = [
         "🦠 What is Bacterial Blotch?",
+        "⚪ Tell me about Dry Bubble",
+        "🕸️ Tell me about Cobweb",
+        "💧 Tell me about Wet Bubble",
+        "🌱 How can I prevent diseases?",
+        "🧼 How should I maintain hygiene?",
         "💧 How can I control moisture?",
         "🌬️ Why is ventilation important?",
-        "🧼 How should I maintain hygiene?"
+        "📷 How should I take a good photo?"
     ]
 
-q1, q2, q3, q4 = st.columns(4)
 
 selected_question = None
 
-with q1:
-    if st.button(questions[0], use_container_width=True):
-        selected_question = questions[0]
+question_cols = st.columns(3)
 
-with q2:
-    if st.button(questions[1], use_container_width=True):
-        selected_question = questions[1]
+for i, question in enumerate(questions):
 
-with q3:
-    if st.button(questions[2], use_container_width=True):
-        selected_question = questions[2]
+    with question_cols[i % 3]:
 
-with q4:
-    if st.button(questions[3], use_container_width=True):
-        selected_question = questions[3]
+        if st.button(
+            question,
+            use_container_width=True
+        ):
+
+            selected_question = question
 
 
 # --------------------------------------------------
@@ -755,15 +1155,19 @@ with q4:
 # --------------------------------------------------
 
 if "messages" not in st.session_state:
+
     st.session_state.messages = []
 
 
-# Display previous messages
-
 for message in st.session_state.messages:
 
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    with st.chat_message(
+        message["role"]
+    ):
+
+        st.markdown(
+            message["content"]
+        )
 
 
 # --------------------------------------------------
@@ -771,15 +1175,19 @@ for message in st.session_state.messages:
 # --------------------------------------------------
 
 user_question = st.chat_input(
-    "Ask your question..." if not is_kannada else "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
+    "Ask your question..."
+    if not is_kannada
+    else
+    "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
 )
 
 if selected_question:
+
     user_question = selected_question
 
 
 # --------------------------------------------------
-# PROCESS QUESTION
+# PROCESS
 # --------------------------------------------------
 
 if user_question:
@@ -809,13 +1217,22 @@ if user_question:
 if st.session_state.messages:
 
     if st.button(
-        "🗑️ Clear Chat" if not is_kannada else "🗑️ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ",
+        "🗑️ Clear Chat"
+        if not is_kannada
+        else
+        "🗑️ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ",
         use_container_width=True
     ):
+
         st.session_state.messages = []
+
         st.rerun()
 
-st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)
 
 
 # --------------------------------------------------
@@ -846,7 +1263,8 @@ st.markdown("""
 
 🍄 <b>Mushroom AI Assistant</b><br>
 
-AI Based Mushroom Disease Detection Using Image Processing & Deep Learning<br><br>
+AI Based Mushroom Disease Detection Using
+Image Processing & Deep Learning<br><br>
 
 🌱 Smart Farming • 🤖 Artificial Intelligence • 👨‍🌾 Farmer Support
 
