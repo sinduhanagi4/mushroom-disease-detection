@@ -17,26 +17,15 @@ st.set_page_config(
 
 
 # ============================================================
-# SIMPLE PAGE STYLE
+# PAGE STYLE
 # ============================================================
 
 st.markdown(
     """
     <style>
+
     .stApp {
         background-color: #f0fdf4;
-    }
-
-    .main-title {
-        color: #065f46;
-        font-size: 42px;
-        font-weight: 800;
-    }
-
-    .subtitle {
-        color: #047857;
-        font-size: 20px;
-        font-weight: 500;
     }
 
     .section-title {
@@ -46,10 +35,72 @@ st.markdown(
         margin-top: 20px;
     }
 
-    .small-text {
-        color: #4b5563;
-        font-size: 16px;
+    /* HERO */
+
+    .hero-box {
+        background: linear-gradient(
+            135deg,
+            #064e3b,
+            #047857,
+            #10b981
+        );
+
+        padding: 45px 30px;
+        border-radius: 25px;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 35px;
+
+        box-shadow:
+            0 10px 30px rgba(0, 100, 70, 0.20);
     }
+
+    .hero-badge {
+        display: inline-block;
+
+        background: rgba(255,255,255,0.18);
+
+        color: white;
+
+        padding: 10px 20px;
+
+        border-radius: 30px;
+
+        font-size: 15px;
+
+        margin-bottom: 18px;
+    }
+
+    .hero-title {
+        color: white;
+
+        font-size: 44px;
+
+        font-weight: 800;
+
+        margin: 10px 0;
+    }
+
+    .hero-subtitle {
+        color: #d1fae5;
+
+        font-size: 22px;
+
+        font-weight: 600;
+
+        margin-bottom: 12px;
+    }
+
+    .hero-description {
+        color: #ecfdf5;
+
+        font-size: 17px;
+
+        max-width: 750px;
+
+        margin: auto;
+    }
+
     </style>
     """,
     unsafe_allow_html=True
@@ -73,44 +124,69 @@ is_kannada = language == "🇮🇳 ಕನ್ನಡ"
 # HERO SECTION
 # ============================================================
 
-st.success("🌱 AI Powered Agriculture • Smart Farming")
-
 if is_kannada:
 
-    st.markdown(
-        '<div class="main-title">🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ</div>',
-        unsafe_allow_html=True
+    hero_badge = (
+        "🌱 AI ಆಧಾರಿತ ಕೃಷಿ • ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್"
     )
 
-    st.markdown(
-        '<div class="subtitle">ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತ ಸಹಾಯ</div>',
-        unsafe_allow_html=True
+    hero_title = (
+        "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
     )
 
-    st.write(
-        "ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು ಮಶ್ರೂಮ್ ರೋಗದ "
-        "ಬಗ್ಗೆ ಸರಳ ರೈತ ಸ್ನೇಹಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ."
+    hero_subtitle = (
+        "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತ ಸಹಾಯ"
+    )
+
+    hero_description = (
+        "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು "
+        "ಸರಳ ರೈತ ಸ್ನೇಹಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ."
     )
 
 else:
 
-    st.markdown(
-        '<div class="main-title">🍄 Mushroom AI Assistant</div>',
-        unsafe_allow_html=True
+    hero_badge = (
+        "🌱 AI Powered Agriculture • Smart Farming"
     )
 
-    st.markdown(
-        '<div class="subtitle">Smart Mushroom Disease Detection & Farmer Support</div>',
-        unsafe_allow_html=True
+    hero_title = (
+        "🍄 Mushroom AI Assistant"
     )
 
-    st.write(
+    hero_subtitle = (
+        "Smart Mushroom Disease Detection & Farmer Support"
+    )
+
+    hero_description = (
         "Upload a mushroom image and receive simple, "
         "farmer-friendly disease guidance."
     )
 
 
-st.divider()
+st.markdown(
+    f"""
+    <div class="hero-box">
+
+        <div class="hero-badge">
+            {hero_badge}
+        </div>
+
+        <div class="hero-title">
+            {hero_title}
+        </div>
+
+        <div class="hero-subtitle">
+            {hero_subtitle}
+        </div>
+
+        <div class="hero-description">
+            {hero_description}
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # ============================================================
@@ -118,13 +194,20 @@ st.divider()
 # ============================================================
 
 if is_kannada:
+
     st.markdown(
-        '<div class="section-title">🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</div>',
+        '<div class="section-title">'
+        '🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್'
+        '</div>',
         unsafe_allow_html=True
     )
+
 else:
+
     st.markdown(
-        '<div class="section-title">🌿 Smart Farming Dashboard</div>',
+        '<div class="section-title">'
+        '🌿 Smart Farming Dashboard'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -300,7 +383,9 @@ advice = {
 if is_kannada:
 
     st.markdown(
-        '<div class="section-title">🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ</div>',
+        '<div class="section-title">'
+        '🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -311,7 +396,9 @@ if is_kannada:
 else:
 
     st.markdown(
-        '<div class="section-title">🔬 Mushroom Disease Detection</div>',
+        '<div class="section-title">'
+        '🔬 Mushroom Disease Detection'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -336,10 +423,6 @@ if uploaded_file is not None:
         uploaded_file
     ).convert("RGB")
 
-
-    # --------------------------------------------------------
-    # DISPLAY UPLOADED IMAGE
-    # --------------------------------------------------------
 
     st.subheader("📷 Uploaded Mushroom")
 
@@ -386,10 +469,6 @@ if uploaded_file is not None:
         )
 
 
-    # --------------------------------------------------------
-    # RESULT
-    # --------------------------------------------------------
-
     predicted_index = np.argmax(
         prediction[0]
     )
@@ -416,35 +495,30 @@ if uploaded_file is not None:
         display_name = predicted_class
 
 
+    # ========================================================
+    # RESULT
+    # ========================================================
+
     st.divider()
-
-
-    # ========================================================
-    # DETECTION RESULT
-    # ========================================================
 
     if is_kannada:
 
-        st.subheader("🔍 ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ")
+        st.subheader(
+            "🔍 ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
+        )
 
     else:
 
-        st.subheader("🔍 Detection Result")
+        st.subheader(
+            "🔍 Detection Result"
+        )
 
 
     if predicted_class == "Healthy":
 
-        if is_kannada:
-
-            st.success(
-                f"🟢 {display_name}"
-            )
-
-        else:
-
-            st.success(
-                f"🟢 {display_name}"
-            )
+        st.success(
+            f"🟢 {display_name}"
+        )
 
     else:
 
@@ -467,11 +541,15 @@ if uploaded_file is not None:
 
     if is_kannada:
 
-        st.subheader("📊 ವಿಶ್ವಾಸ ಮಟ್ಟ")
+        st.subheader(
+            "📊 ವಿಶ್ವಾಸ ಮಟ್ಟ"
+        )
 
     else:
 
-        st.subheader("📊 Prediction Confidence")
+        st.subheader(
+            "📊 Prediction Confidence"
+        )
 
 
     st.metric(
@@ -504,31 +582,25 @@ if uploaded_file is not None:
 
     if predicted_class == "Healthy":
 
-        if is_kannada:
-
-            st.success(
+        st.success(
+            (
                 f"🌱 **ಶಿಫಾರಸು:** {advice_text}"
-            )
-
-        else:
-
-            st.success(
+                if is_kannada
+                else
                 f"🌱 **Recommended Action:** {advice_text}"
             )
+        )
 
     else:
 
-        if is_kannada:
-
-            st.warning(
+        st.warning(
+            (
                 f"⚠️ **ರೈತರಿಗೆ ಸಲಹೆ:** {advice_text}"
-            )
-
-        else:
-
-            st.warning(
+                if is_kannada
+                else
                 f"⚠️ **Farmer Advice:** {advice_text}"
             )
+        )
 
 
 # ============================================================
@@ -541,14 +613,18 @@ st.divider()
 if is_kannada:
 
     st.markdown(
-        '<div class="section-title">🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು</div>',
+        '<div class="section-title">'
+        '🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು'
+        '</div>',
         unsafe_allow_html=True
     )
 
 else:
 
     st.markdown(
-        '<div class="section-title">🌱 Useful Farmer Advice</div>',
+        '<div class="section-title">'
+        '🌱 Useful Farmer Advice'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -598,14 +674,18 @@ st.divider()
 if is_kannada:
 
     st.markdown(
-        '<div class="section-title">🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು</div>',
+        '<div class="section-title">'
+        '🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು'
+        '</div>',
         unsafe_allow_html=True
     )
 
 else:
 
     st.markdown(
-        '<div class="section-title">🦠 Supported Diseases</div>',
+        '<div class="section-title">'
+        '🦠 Supported Diseases'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -639,15 +719,11 @@ for column, disease, icon in zip(
 
     with column:
 
-        if is_kannada:
-
-            name = kannada_names[
-                disease
-            ]
-
-        else:
-
-            name = disease
+        name = (
+            kannada_names[disease]
+            if is_kannada
+            else disease
+        )
 
         st.info(
             f"{icon} **{name}**"
@@ -664,14 +740,18 @@ st.divider()
 if is_kannada:
 
     st.markdown(
-        '<div class="section-title">⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?</div>',
+        '<div class="section-title">'
+        '⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?'
+        '</div>',
         unsafe_allow_html=True
     )
 
 else:
 
     st.markdown(
-        '<div class="section-title">⚙️ How It Works</div>',
+        '<div class="section-title">'
+        '⚙️ How It Works'
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -711,7 +791,9 @@ st.divider()
 
 
 st.markdown(
-    '<div class="section-title">💬 AI Farmer Assistant</div>',
+    '<div class="section-title">'
+    '💬 AI Farmer Assistant'
+    '</div>',
     unsafe_allow_html=True
 )
 
@@ -747,7 +829,7 @@ def get_chatbot_response(
 
 
     # ========================================================
-    # KANNADA RESPONSES
+    # KANNADA
     # ========================================================
 
     if kannada:
@@ -877,7 +959,7 @@ def get_chatbot_response(
 
 
     # ========================================================
-    # ENGLISH RESPONSES
+    # ENGLISH
     # ========================================================
 
     else:
@@ -1001,28 +1083,46 @@ def get_chatbot_response(
 if is_kannada:
 
     quick_questions = [
+
         "🦠 ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಎಂದರೇನು?",
+
         "⚪ ಡ್ರೈ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "🕸️ ಕಾಬ್‌ವೆಬ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "💧 ವೆಟ್ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "🌱 ರೋಗಗಳನ್ನು ಹೇಗೆ ತಡೆಯುವುದು?",
+
         "🧼 ಸ್ವಚ್ಛತೆಯನ್ನು ಹೇಗೆ ಕಾಪಾಡುವುದು?",
+
         "💧 ತೇವಾಂಶವನ್ನು ಹೇಗೆ ನಿಯಂತ್ರಿಸುವುದು?",
+
         "🌬️ ಗಾಳಿಯ ಹರಿವು ಏಕೆ ಮುಖ್ಯ?",
+
         "📷 ಉತ್ತಮ ಫೋಟೋ ಹೇಗೆ ತೆಗೆದುಕೊಳ್ಳುವುದು?"
     ]
 
 else:
 
     quick_questions = [
+
         "🦠 What is Bacterial Blotch?",
+
         "⚪ Tell me about Dry Bubble",
+
         "🕸️ Tell me about Cobweb",
+
         "💧 Tell me about Wet Bubble",
+
         "🌱 How can I prevent diseases?",
+
         "🧼 How should I maintain hygiene?",
+
         "💧 How can I control moisture?",
+
         "🌬️ Why is ventilation important?",
+
         "📷 How should I take a good photo?"
     ]
 
@@ -1072,7 +1172,7 @@ for i, question in enumerate(
 
 
 # ============================================================
-# SHOW CHAT HISTORY
+# CHAT HISTORY
 # ============================================================
 
 for message in st.session_state.messages:
