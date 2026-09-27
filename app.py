@@ -667,153 +667,151 @@ with advice_col2:
 
 # ============================================================
 # SUPPORTED DISEASES
+# ============================================================
 
 st.divider()
 
+
 if is_kannada:
-    st.markdown("## 🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ಮಶ್ರೂಮ್ ರೋಗಗಳು")
-    st.write(
-        "ಈ ಅಪ್ಲಿಕೇಶನ್ ಕೆಳಗಿನ ಐದು ವರ್ಗಗಳನ್ನು ಗುರುತಿಸಲು ತರಬೇತಿ ಪಡೆದಿದೆ."
-    )
-else:
-    st.markdown("## 🦠 Supported Mushroom Diseases")
-    st.write(
-        "This application is trained to identify the following five classes."
+
+    st.markdown(
+        '<div class="section-title">'
+        '🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು'
+        '</div>',
+        unsafe_allow_html=True
     )
 
-disease_info = {
-    "Healthy": {
-        "icon": "🍄",
-        "en": "Healthy mushroom",
-        "kn": "ಆರೋಗ್ಯಕರ ಮಶ್ರೂಮ್"
-    },
-    "Bacterial Blotch": {
-        "icon": "🦠",
-        "en": "Bacterial disease",
-        "kn": "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ರೋಗ"
-    },
-    "Dry Bubble": {
-        "icon": "⚪",
-        "en": "Dry Bubble disease",
-        "kn": "ಡ್ರೈ ಬಬಲ್ ರೋಗ"
-    },
-    "Cobweb": {
-        "icon": "🕸️",
-        "en": "Cobweb disease",
-        "kn": "ಕಾಬ್‌ವೆಬ್ ರೋಗ"
-    },
-    "Wet Bubble": {
-        "icon": "💧",
-        "en": "Wet Bubble disease",
-        "kn": "ವೆಟ್ ಬಬಲ್ ರೋಗ"
-    }
-}
+else:
+
+    st.markdown(
+        '<div class="section-title">'
+        '🦠 Supported Diseases'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
 
 d1, d2, d3, d4, d5 = st.columns(5)
 
-disease_columns = [d1, d2, d3, d4, d5]
 
-for column, disease in zip(disease_columns, class_names):
+disease_columns = [
+    d1,
+    d2,
+    d3,
+    d4,
+    d5
+]
 
-    info = disease_info[disease]
+
+disease_icons = [
+    "🍄",
+    "🦠",
+    "⚪",
+    "🕸️",
+    "💧"
+]
+
+
+for column, disease, icon in zip(
+    disease_columns,
+    class_names,
+    disease_icons
+):
 
     with column:
 
-        display_name = (
+        name = (
             kannada_names[disease]
             if is_kannada
             else disease
         )
 
-        description = (
-            info["kn"]
-            if is_kannada
-            else info["en"]
+        st.info(
+            f"{icon} **{name}**"
         )
 
-        if disease == "Healthy":
-            st.success(
-                f"""
-                {info["icon"]}
 
-                ### {display_name}
-
-                {description}
-                """
-            )
-
-        else:
-            st.warning(
-                f"""
-                {info["icon"]}
-
-                ### {display_name}
-
-                {description}
-                """
-            )
-
-st.info(
-    "💡 **Tip:** Upload a clear mushroom image above to check its condition."
-    if not is_kannada
-    else
-    "💡 **ಸಲಹೆ:** ಮಶ್ರೂಮ್‌ನ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಮೇಲಿನ ವಿಭಾಗದಲ್ಲಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
-)
-
-
+# ============================================================
+# ============================================================
 # HOW IT WORKS
 # ============================================================
-
 st.divider()
-
-
 if is_kannada:
-
-    st.markdown(
-        '<div class="section-title">'
-        '⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?'
-        '</div>',
-        unsafe_allow_html=True
-    )
-
+    st.markdown("## ⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?")
+    st.write("ಮಶ್ರೂಮ್ ಚಿತ್ರದಿಂದ ರೋಗ ಪತ್ತೆಹಚ್ಚಲು ಈ ಮೂರು ಸರಳ ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ.")
 else:
+    st.markdown("## ⚙️ How It Works")
+    st.write("Follow these three simple steps to detect a mushroom disease.")
 
-    st.markdown(
-        '<div class="section-title">'
-        '⚙️ How It Works'
-        '</div>',
-        unsafe_allow_html=True
+how1, how2, how3 = st.columns(3)
+
+with how1:
+    st.info(
+        """
+        ### 1️⃣ 📷 Upload Image
+        **Choose a clear mushroom photo**
+        • Use JPG, JPEG or PNG  
+        • Use good lighting  
+        • Keep the mushroom clearly visible
+        """
+        if not is_kannada
+        else
+        """
+        ### 1️⃣ 📷 ಚಿತ್ರ ಅಪ್‌ಲೋಡ್
+        **ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ**
+        • JPG, JPEG ಅಥವಾ PNG ಬಳಸಿ  
+        • ಉತ್ತಮ ಬೆಳಕು ಬಳಸಿ  
+        • ಮಶ್ರೂಮ್ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಲಿ
+        """
     )
 
+with how2:
+    st.warning(
+        """
+        ### 2️⃣ 🤖 AI Analysis
+        **MobileNetV2 analyzes the image**
+        • Image is resized to 224×224  
+        • Deep learning model analyzes it  
+        • The predicted disease is identified
+        """
+        if not is_kannada
+        else
+        """
+        ### 2️⃣ 🤖 AI ವಿಶ್ಲೇಷಣೆ
+        **MobileNetV2 ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ**
+        • ಚಿತ್ರವನ್ನು 224×224 ಗಾತ್ರಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗುತ್ತದೆ  
+        • Deep Learning ಮಾದರಿ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ  
+        • ಸಂಭವನೀಯ ರೋಗವನ್ನು ಗುರುತಿಸಲಾಗುತ್ತದೆ
+        """
+    )
 
-h1, h2, h3 = st.columns(3)
-
-
-with h1:
-
+with how3:
     st.success(
-        "### 1️⃣ Upload\n\n"
-        "Upload a mushroom image."
+        """
+        ### 3️⃣ 🌱 Farmer Guidance
+        **Get simple results and advice**
+        • View the detected class  
+        • See prediction confidence  
+        • Get practical farmer guidance
+        """
+        if not is_kannada
+        else
+        """
+        ### 3️⃣ 🌱 ರೈತ ಮಾರ್ಗದರ್ಶನ
+        **ಸರಳ ಫಲಿತಾಂಶ ಮತ್ತು ಸಲಹೆ ಪಡೆಯಿರಿ**
+        • ಪತ್ತೆಯಾದ ವರ್ಗವನ್ನು ನೋಡಿ  
+        • ವಿಶ್ವಾಸ ಮಟ್ಟವನ್ನು ನೋಡಿ  
+        • ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆ ಪಡೆಯಿರಿ
+        """
     )
 
+st.info(
+    "💡 **Simple Process:** Upload → AI Analysis → Disease Result → Farmer Guidance"
+    if not is_kannada
+    else
+    "💡 **ಸರಳ ಪ್ರಕ್ರಿಯೆ:** ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ → AI ವಿಶ್ಲೇಷಣೆ → ರೋಗ ಫಲಿತಾಂಶ → ರೈತ ಮಾರ್ಗದರ್ಶನ"
+)
 
-with h2:
-
-    st.success(
-        "### 2️⃣ Analyze\n\n"
-        "MobileNetV2 analyzes the image."
-    )
-
-
-with h3:
-
-    st.success(
-        "### 3️⃣ Guidance\n\n"
-        "Receive disease information and advice."
-    )
-
-
-# ============================================================
 # FARMER ASSISTANT
 # ============================================================
 
