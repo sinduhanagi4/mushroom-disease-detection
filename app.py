@@ -436,227 +436,120 @@ advice = {
 # DISEASE DETECTION
 # ============================================================
 
+st.markdown("---")
+
 if is_kannada:
-
-    st.markdown(
-        '<div class="section-title">'
-        '🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ'
-        '</div>',
-        unsafe_allow_html=True
-    )
-
-    st.write(
-        "📷 ಮಶ್ರೂಮ್‌ನ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
-    )
-
+    st.markdown("## 🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ")
+    st.write("ಮಶ್ರೂಮ್‌ನ ಸ್ಪಷ್ಟ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ನಮ್ಮ MobileNetV2 ಮಾದರಿ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ.")
 else:
+    st.markdown("## 🔬 Mushroom Disease Detection")
+    st.write("Upload a clear mushroom image. Our MobileNetV2 model will analyze the image.")
 
-    st.markdown(
-        '<div class="section-title">'
-        '🔬 Mushroom Disease Detection'
-        '</div>',
-        unsafe_allow_html=True
+upload_col1, upload_col2 = st.columns([1, 1])
+
+with upload_col1:
+    if is_kannada:
+        st.info("📷 **ಚಿತ್ರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ**\n\nJPG, JPEG ಅಥವಾ PNG ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.")
+    else:
+        st.info("📷 **Choose an Image**\n\nUpload a JPG, JPEG or PNG image.")
+
+    uploaded_file = st.file_uploader(
+        "Upload Mushroom Image",
+        type=["jpg", "jpeg", "png"],
+        label_visibility="collapsed"
     )
 
-    st.write(
-        "📷 Upload a clear image of the mushroom."
-    )
-
-
-uploaded_file = st.file_uploader(
-    "Choose a mushroom image",
-    type=["jpg", "jpeg", "png"]
-)
-
-
-# ============================================================
-# PREDICTION
-# ============================================================
+with upload_col2:
+    if is_kannada:
+        st.success("💡 **ಉತ್ತಮ ಫಲಿತಾಂಶಕ್ಕಾಗಿ**\n\n• ಉತ್ತಮ ಬೆಳಕು ಬಳಸಿ\n\n• ಮಶ್ರೂಮ್ ಸ್ಪಷ್ಟವಾಗಿರಲಿ\n\n• ಮಸುಕಾದ ಚಿತ್ರಗಳನ್ನು ತಪ್ಪಿಸಿ")
+    else:
+        st.success("💡 **For Better Results**\n\n• Use good lighting\n\n• Keep the mushroom clearly visible\n\n• Avoid blurry images")
 
 if uploaded_file is not None:
+    st.markdown("---")
 
-    image = Image.open(
-        uploaded_file
-    ).convert("RGB")
+    image = Image.open(uploaded_file).convert("RGB")
 
+    image_col, result_col = st.columns([1, 1])
 
-    st.subheader("📷 Uploaded Mushroom")
+    with image_col:
+        st.subheader(
+            "📷 ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರ"
+            if is_kannada
+            else "📷 Uploaded Image"
+        )
+        st.image(image, use_container_width=True)
 
-    st.image(
-        image,
-        width=400
-    )
-
-
-    # --------------------------------------------------------
-    # PREPROCESS IMAGE
-    # --------------------------------------------------------
-
-    img = image.resize(
-        (224, 224)
-    )
-
-    img_array = np.array(
-        img
-    )
-
+    img = image.resize((224, 224))
+    img_array = np.array(img)
     img_array = img_array / 255.0
-
-    img_array = np.expand_dims(
-        img_array,
-        axis=0
-    )
-
-
-    # --------------------------------------------------------
-    # PREDICT
-    # --------------------------------------------------------
+    img_array = np.expand_dims(img_array, axis=0)
 
     with st.spinner(
         "🤖 Analyzing mushroom..."
         if not is_kannada
-        else
-        "🤖 ಮಶ್ರೂಮ್ ಅನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..."
+        else "🤖 ಮಶ್ರೂಮ್ ಅನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..."
     ):
+        prediction = model.predict(img_array, verbose=0)
 
-        prediction = model.predict(
-            img_array,
-            verbose=0
-        )
+    predicted_index = np.argmax(prediction[0])
+    predicted_class = class_names[predicted_index]
+    confidence = float(prediction[0][predicted_index]) * 100
 
-
-    predicted_index = np.argmax(
-        prediction[0]
+    display_name = (
+        kannada_names[predicted_class]
+        if is_kannada
+        else predicted_class
     )
 
-    predicted_class = class_names[
-        predicted_index
-    ]
-
-    confidence = (
-        float(
-            prediction[0][predicted_index]
-        ) * 100
-    )
-
-
-    if is_kannada:
-
-        display_name = kannada_names[
-            predicted_class
-        ]
-
-    else:
-
-        display_name = predicted_class
-
-
-    # ========================================================
-    # RESULT
-    # ========================================================
-
-    st.divider()
-
-    if is_kannada:
-
+    with result_col:
         st.subheader(
             "🔍 ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
+            if is_kannada
+            else "🔍 Detection Result"
         )
 
-    else:
-
-        st.subheader(
-            "🔍 Detection Result"
-        )
-
-
-    if predicted_class == "Healthy":
-
-        st.success(
-            f"🟢 {display_name}"
-        )
-
-    else:
-
-        if is_kannada:
-
-            st.error(
-                f"🔴 ರೋಗ ಪತ್ತೆಯಾಗಿದೆ: {display_name}"
-            )
-
+        if predicted_class == "Healthy":
+            st.success(f"🟢 {display_name}")
         else:
+            if is_kannada:
+                st.error(f"🔴 ರೋಗ ಪತ್ತೆಯಾಗಿದೆ\n\n**{display_name}**")
+            else:
+                st.error(f"🔴 Disease Detected\n\n**{display_name}**")
 
-            st.error(
-                f"🔴 Disease Detected: {display_name}"
-            )
-
-
-    # ========================================================
-    # CONFIDENCE
-    # ========================================================
-
-    if is_kannada:
-
-        st.subheader(
-            "📊 ವಿಶ್ವಾಸ ಮಟ್ಟ"
+        st.write(
+            "📊 **ವಿಶ್ವಾಸ ಮಟ್ಟ**"
+            if is_kannada
+            else "📊 **Prediction Confidence**"
         )
 
-    else:
+        st.progress(min(max(confidence / 100, 0.0), 1.0))
+        st.metric("Confidence", f"{confidence:.2f}%")
 
-        st.subheader(
-            "📊 Prediction Confidence"
-        )
+    st.markdown("---")
 
-
-    st.metric(
-        "Confidence",
-        f"{confidence:.2f}%"
-    )
-
-
-    st.progress(
-        min(
-            max(
-                confidence / 100,
-                0.0
-            ),
-            1.0
-        )
-    )
-
-
-    # ========================================================
-    # FARMER RECOMMENDATION
-    # ========================================================
-
-    advice_text = advice[
-        predicted_class
-    ][
+    advice_text = advice[predicted_class][
         "kn" if is_kannada else "en"
     ]
 
-
     if predicted_class == "Healthy":
-
-        st.success(
-            (
-                f"🌱 **ಶಿಫಾರಸು:** {advice_text}"
-                if is_kannada
-                else
-                f"🌱 **Recommended Action:** {advice_text}"
+        if is_kannada:
+            st.success(
+                f"🌱 **ರೈತರಿಗೆ ಶಿಫಾರಸು**\n\n{advice_text}"
             )
-        )
-
+        else:
+            st.success(
+                f"🌱 **Farmer Recommendation**\n\n{advice_text}"
+            )
     else:
-
-        st.warning(
-            (
-                f"⚠️ **ರೈತರಿಗೆ ಸಲಹೆ:** {advice_text}"
-                if is_kannada
-                else
-                f"⚠️ **Farmer Advice:** {advice_text}"
+        if is_kannada:
+            st.warning(
+                f"⚠️ **ರೈತರಿಗೆ ಸಲಹೆ**\n\n{advice_text}"
             )
-        )
+        else:
+            st.warning(
+                f"⚠️ **Farmer Advice**\n\n{advice_text}"
+            )
 
 
 # ============================================================
