@@ -177,62 +177,134 @@ st.divider()
 # DASHBOARD
 # ============================================================
 
+# ============================================================
+# DASHBOARD
+# ============================================================
+
 if is_kannada:
 
     st.markdown(
-        '<div class="section-title">'
-        '🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್'
-        '</div>',
-        unsafe_allow_html=True
+        "## 🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
+    )
+
+    st.write(
+        "ಮಶ್ರೂಮ್ ಕೃಷಿಗೆ ಅಗತ್ಯವಾದ ಸ್ಮಾರ್ಟ್ ಸಹಾಯವನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ಪಡೆಯಿರಿ."
     )
 
 else:
 
     st.markdown(
-        '<div class="section-title">'
-        '🌿 Smart Farming Dashboard'
-        '</div>',
-        unsafe_allow_html=True
+        "## 🌿 Smart Farming Dashboard"
+    )
+
+    st.write(
+        "Get smart support for mushroom farming in one place."
     )
 
 
-col1, col2, col3, col4 = st.columns(4)
+# ============================================================
+# DASHBOARD CARDS
+# ============================================================
+
+card1, card2, card3, card4 = st.columns(4)
 
 
-with col1:
+with card1:
 
-    st.metric(
-        "🔬 AI Detection",
-        "5 Diseases"
+    st.info(
+        """
+        ### 🔬
+        **AI Disease Detection**
+
+        Upload a mushroom image and detect
+        common mushroom diseases.
+        """
     )
 
 
-with col2:
+with card2:
 
-    st.metric(
-        "🤖 Model",
-        "MobileNetV2"
+    st.success(
+        """
+        ### 🌱
+        **Farmer Guidance**
+
+        Get simple recommendations for
+        hygiene, moisture and ventilation.
+        """
     )
 
 
-with col3:
+with card3:
 
-    st.metric(
-        "📷 Input",
-        "Image"
+    st.warning(
+        """
+        ### 💬
+        **AI Farmer Assistant**
+
+        Ask questions about mushroom
+        diseases and prevention.
+        """
     )
 
 
-with col4:
+with card4:
 
-    st.metric(
-        "🌱 Support",
-        "Farmer"
+    st.error(
+        """
+        ### 🦠
+        **Disease Insights**
+
+        Learn about the five diseases
+        supported by this application.
+        """
+    )
+
+
+st.write("")
+
+
+# ============================================================
+# QUICK PROJECT FEATURES
+# ============================================================
+
+feature1, feature2, feature3 = st.columns(3)
+
+
+with feature1:
+
+    st.markdown(
+        "### 📷 Image Based"
+    )
+
+    st.write(
+        "Upload a mushroom image for automatic analysis."
+    )
+
+
+with feature2:
+
+    st.markdown(
+        "### 🤖 MobileNetV2"
+    )
+
+    st.write(
+        "The trained deep learning model analyzes the image."
+    )
+
+
+with feature3:
+
+    st.markdown(
+        "### 🌾 Farmer Friendly"
+    )
+
+    st.write(
+        "Simple disease information and practical guidance."
     )
 
 
 st.divider()
-
 
 # ============================================================
 # LOAD MODEL
