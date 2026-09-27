@@ -124,20 +124,15 @@ is_kannada = language == "🇮🇳 ಕನ್ನಡ"
 # HERO SECTION
 # ============================================================
 
+# ============================================================
+# HERO SECTION - NO HTML
+# ============================================================
+
 if is_kannada:
 
-    hero_badge = (
-        "🌱 AI ಆಧಾರಿತ ಕೃಷಿ • ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್"
-    )
-
-    hero_title = (
-        "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
-    )
-
-    hero_subtitle = (
-        "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತ ಸಹಾಯ"
-    )
-
+    hero_badge = "🌱 AI ಆಧಾರಿತ ಕೃಷಿ • ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್"
+    hero_title = "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
+    hero_subtitle = "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತ ಸಹಾಯ"
     hero_description = (
         "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು "
         "ಸರಳ ರೈತ ಸ್ನೇಹಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ."
@@ -145,49 +140,38 @@ if is_kannada:
 
 else:
 
-    hero_badge = (
-        "🌱 AI Powered Agriculture • Smart Farming"
-    )
-
-    hero_title = (
-        "🍄 Mushroom AI Assistant"
-    )
-
-    hero_subtitle = (
-        "Smart Mushroom Disease Detection & Farmer Support"
-    )
-
+    hero_badge = "🌱 AI Powered Agriculture • Smart Farming"
+    hero_title = "🍄 Mushroom AI Assistant"
+    hero_subtitle = "Smart Mushroom Disease Detection & Farmer Support"
     hero_description = (
         "Upload a mushroom image and receive simple, "
         "farmer-friendly disease guidance."
     )
 
 
-st.markdown(
-    f"""
-    <div class="hero-box">
+# Highlighted badge
+st.success(hero_badge)
 
-        <div class="hero-badge">
-            {hero_badge}
-        </div>
 
-        <div class="hero-title">
-            {hero_title}
-        </div>
+# Centered title
+left, center, right = st.columns([1, 3, 1])
 
-        <div class="hero-subtitle">
-            {hero_subtitle}
-        </div>
+with center:
 
-        <div class="hero-description">
-            {hero_description}
-        </div>
+    st.markdown(
+        f"## {hero_title}"
+    )
 
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    st.markdown(
+        f"### {hero_subtitle}"
+    )
 
+    st.write(
+        hero_description
+    )
+
+
+st.divider()
 
 # ============================================================
 # DASHBOARD
