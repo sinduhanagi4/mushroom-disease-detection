@@ -93,12 +93,25 @@ st.markdown(
 
     .hero-description {
         color: #ecfdf5;
-
         font-size: 17px;
-
         max-width: 750px;
-
         margin: auto;
+    }
+
+    .language-note {
+        text-align: center;
+        font-weight: 700;
+        color: #065f46;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .farmer-highlight {
+        padding: 18px 22px;
+        border-radius: 18px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        margin: 12px 0 24px 0;
     }
 
     </style>
@@ -111,10 +124,12 @@ st.markdown(
 # LANGUAGE SELECTION
 # ============================================================
 
+st.markdown("### 🌐 Select Language / ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ")
 language = st.radio(
-    "🌐 Select Language / ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ",
+    "Language / ಭಾಷೆ",
     ["🇬🇧 English", "🇮🇳 ಕನ್ನಡ"],
-    horizontal=True
+    horizontal=True,
+    label_visibility="collapsed"
 )
 
 is_kannada = language == "🇮🇳 ಕನ್ನಡ"
@@ -149,26 +164,14 @@ else:
     )
 
 
-# Highlighted badge
-st.success(hero_badge)
+# Highlighted hero
+hero_left, hero_center, hero_right = st.columns([1, 4, 1])
 
-
-# Centered title
-left, center, right = st.columns([1, 3, 1])
-
-with center:
-
-    st.markdown(
-        f"## {hero_title}"
-    )
-
-    st.markdown(
-        f"### {hero_subtitle}"
-    )
-
-    st.write(
-        hero_description
-    )
+with hero_center:
+    st.success(hero_badge)
+    st.markdown(f"# {hero_title}")
+    st.markdown(f"### {hero_subtitle}")
+    st.write(hero_description)
 
 
 st.divider()
@@ -199,6 +202,51 @@ else:
 
     st.write(
         "Get smart support for mushroom farming in one place."
+    )
+
+
+# ============================================================
+# PROJECT SNAPSHOT
+# ============================================================
+
+stat1, stat2, stat3, stat4 = st.columns(4)
+
+with stat1:
+    st.metric(
+        "🦠 Supported Diseases" if not is_kannada else "🦠 ಪತ್ತೆಹಚ್ಚುವ ರೋಗಗಳು",
+        "5"
+    )
+
+with stat2:
+    st.metric(
+        "🖼️ Training Images" if not is_kannada else "🖼️ ತರಬೇತಿ ಚಿತ್ರಗಳು",
+        "3,195"
+    )
+
+with stat3:
+    st.metric(
+        "📐 Image Size" if not is_kannada else "📐 ಚಿತ್ರದ ಗಾತ್ರ",
+        "224 × 224"
+    )
+
+with stat4:
+    st.metric(
+        "🎯 Best Validation" if not is_kannada else "🎯 ಉತ್ತಮ Validation",
+        "92.62%"
+    )
+
+
+# ============================================================
+# FARMER HIGHLIGHT
+# ============================================================
+
+if is_kannada:
+    st.success(
+        "🧑‍🌾 **ರೈತ ಸ್ನೇಹಿ ಸಹಾಯ:** ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, AI ಫಲಿತಾಂಶ ನೋಡಿ ಮತ್ತು ಸರಳ ಕೃಷಿ ಸಲಹೆ ಪಡೆಯಿರಿ."
+    )
+else:
+    st.success(
+        "🧑‍🌾 **Farmer-friendly support:** Upload an image, view the AI result, and get simple cultivation guidance."
     )
 
 
