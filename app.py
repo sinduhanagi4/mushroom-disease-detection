@@ -558,58 +558,110 @@ if uploaded_file is not None:
 
 st.divider()
 
-
 if is_kannada:
-
-    st.markdown(
-        '<div class="section-title">'
-        '🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು'
-        '</div>',
-        unsafe_allow_html=True
-    )
-
+    st.markdown("## 🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು")
+    st.write("ಮಶ್ರೂಮ್ ಕೃಷಿಯಲ್ಲಿ ಉತ್ತಮ ಆರೋಗ್ಯ ಮತ್ತು ಉತ್ಪಾದನೆಗಾಗಿ ಈ ಸರಳ ಸಲಹೆಗಳನ್ನು ಅನುಸರಿಸಿ.")
 else:
+    st.markdown("## 🌱 Useful Farmer Advice")
+    st.write("Follow these simple practices for healthier mushrooms and better cultivation.")
 
-    st.markdown(
-        '<div class="section-title">'
-        '🌱 Useful Farmer Advice'
-        '</div>',
-        unsafe_allow_html=True
+advice_col1, advice_col2 = st.columns(2)
+
+with advice_col1:
+
+    st.info(
+        """
+        ### 🧼 Hygiene
+
+        **Keep everything clean**
+
+        • Keep the growing room clean  
+        • Clean tools regularly  
+        • Wash hands before handling mushrooms
+        """
+        if not is_kannada
+        else
+        """
+        ### 🧼 ಸ್ವಚ್ಛತೆ
+
+        **ಎಲ್ಲವನ್ನೂ ಸ್ವಚ್ಛವಾಗಿಡಿ**
+
+        • ಬೆಳೆಯುವ ಕೊಠಡಿಯನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ  
+        • ಉಪಕರಣಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಸ್ವಚ್ಛಗೊಳಿಸಿ  
+        • ಮಶ್ರೂಮ್ ಮುಟ್ಟುವ ಮೊದಲು ಕೈಗಳನ್ನು ತೊಳೆಯಿರಿ
+        """
+    )
+
+    st.success(
+        """
+        ### 🌬️ Ventilation
+
+        **Maintain good air circulation**
+
+        • Provide proper airflow  
+        • Avoid stagnant air  
+        • Keep the growing environment comfortable
+        """
+        if not is_kannada
+        else
+        """
+        ### 🌬️ ಗಾಳಿಯ ಹರಿವು
+
+        **ಉತ್ತಮ ಗಾಳಿಯ ಸಂಚಾರ ಇರಲಿ**
+
+        • ಸರಿಯಾದ ಗಾಳಿಯ ಹರಿವು ಒದಗಿಸಿ  
+        • ಗಾಳಿ ನಿಂತುಕೊಳ್ಳದಂತೆ ನೋಡಿಕೊಳ್ಳಿ  
+        • ಬೆಳೆಯುವ ಪರಿಸರವನ್ನು ಸೂಕ್ತವಾಗಿಡಿ
+        """
     )
 
 
-a1, a2, a3, a4 = st.columns(4)
+with advice_col2:
 
+    st.warning(
+        """
+        ### 💧 Moisture Control
 
-with a1:
+        **Avoid excessive surface moisture**
 
-    st.info(
-        "🧼 **Hygiene**\n\n"
-        "Keep the growing area and tools clean."
+        • Do not over-water  
+        • Avoid water staying on mushroom surfaces  
+        • Maintain suitable moisture conditions
+        """
+        if not is_kannada
+        else
+        """
+        ### 💧 ತೇವಾಂಶ ನಿಯಂತ್ರಣ
+
+        **ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ**
+
+        • ಅತಿಯಾಗಿ ನೀರು ಹಾಕಬೇಡಿ  
+        • ಮಶ್ರೂಮ್ ಮೇಲ್ಮೈಯಲ್ಲಿ ನೀರು ನಿಲ್ಲದಂತೆ ನೋಡಿಕೊಳ್ಳಿ  
+        • ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ
+        """
     )
 
+    st.error(
+        """
+        ### 👀 Regular Inspection
 
-with a2:
+        **Check mushrooms regularly**
 
-    st.info(
-        "💧 **Moisture Control**\n\n"
-        "Avoid excessive surface moisture."
-    )
+        • Look for unusual spots or growth  
+        • Separate affected mushrooms  
+        • Take action early
+        """
+        if not is_kannada
+        else
+        """
+        ### 👀 ನಿಯಮಿತ ಪರಿಶೀಲನೆ
 
+        **ಮಶ್ರೂಮ್‌ಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ**
 
-with a3:
-
-    st.info(
-        "🌬️ **Ventilation**\n\n"
-        "Maintain proper air circulation."
-    )
-
-
-with a4:
-
-    st.info(
-        "👀 **Regular Inspection**\n\n"
-        "Check mushrooms regularly."
+        • ಅಸಾಮಾನ್ಯ ಕಲೆಗಳು ಅಥವಾ ಬೆಳವಣಿಗೆಯನ್ನು ಗಮನಿಸಿ  
+        • ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಬೇರ್ಪಡಿಸಿ  
+        • ಆರಂಭದಲ್ಲೇ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ
+        """
     )
 
 
