@@ -1,4 +1,6 @@
-streamlit==1.64.0
-tensorflow==2.20.0
+streamlit
+tensorflow
 numpy
 pillow
+streamlit-mic-recorder==0.0.8
+gTTS
