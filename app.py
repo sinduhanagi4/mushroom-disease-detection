@@ -210,55 +210,95 @@ card1, card2, card3, card4 = st.columns(4)
 
 
 with card1:
+    if is_kannada:
+        st.info(
+            """
+            ### 🔬
+            **AI ರೋಗ ಪತ್ತೆ**
 
-    st.info(
-        """
-        ### 🔬
-        **AI Disease Detection**
+            ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ
+            ಸಾಮಾನ್ಯ ಮಶ್ರೂಮ್ ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ.
+            """
+        )
+    else:
+        st.info(
+            """
+            ### 🔬
+            **AI Disease Detection**
 
-        Upload a mushroom image and detect
-        common mushroom diseases.
-        """
-    )
+            Upload a mushroom image and detect
+            common mushroom diseases.
+            """
+        )
 
 
 with card2:
+    if is_kannada:
+        st.success(
+            """
+            ### 🌱
+            **ರೈತ ಮಾರ್ಗದರ್ಶನ**
 
-    st.success(
-        """
-        ### 🌱
-        **Farmer Guidance**
+            ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಮತ್ತು ಗಾಳಿಯ ಹರಿವಿನ ಕುರಿತು
+            ಸರಳ ಮತ್ತು ಉಪಯುಕ್ತ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ.
+            """
+        )
+    else:
+        st.success(
+            """
+            ### 🌱
+            **Farmer Guidance**
 
-        Get simple recommendations for
-        hygiene, moisture and ventilation.
-        """
-    )
+            Get simple recommendations for
+            hygiene, moisture and ventilation.
+            """
+        )
 
 
 with card3:
+    if is_kannada:
+        st.warning(
+            """
+            ### 💬
+            **AI ರೈತ ಸಹಾಯಕ**
 
-    st.warning(
-        """
-        ### 💬
-        **AI Farmer Assistant**
+            ಮಶ್ರೂಮ್ ರೋಗಗಳು ಮತ್ತು ಅವುಗಳ ತಡೆಗಟ್ಟುವಿಕೆಯ ಕುರಿತು
+            ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ.
+            """
+        )
+    else:
+        st.warning(
+            """
+            ### 💬
+            **AI Farmer Assistant**
 
-        Ask questions about mushroom
-        diseases and prevention.
-        """
-    )
+            Ask questions about mushroom
+            diseases and prevention.
+            """
+        )
 
 
 with card4:
+    if is_kannada:
+        st.error(
+            """
+            ### 🦠
+            **ರೋಗ ಮಾಹಿತಿ**
 
-    st.error(
-        """
-        ### 🦠
-        **Disease Insights**
+            ಈ ಅಪ್ಲಿಕೇಶನ್‌ನಲ್ಲಿ ಬೆಂಬಲಿತವಾಗಿರುವ
+            ಐದು ರೋಗಗಳ ಬಗ್ಗೆ ತಿಳಿದುಕೊಳ್ಳಿ.
+            """
+        )
+    else:
+        st.error(
+            """
+            ### 🦠
+            **Disease Insights**
 
-        Learn about the five diseases
-        supported by this application.
-        """
-    )
+            Learn about the five diseases
+            supported by this application.
+            """
+        )
 
 
 st.write("")
@@ -291,7 +331,7 @@ with feature2:
     )
 
     st.write(
-        "ತರಬೇತಿ ಪಡೆದ Deep Learning ಮಾದರಿ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ."
+        "ತರಬೇತಿ ಪಡೆದ ಡೀಪ್ ಲರ್ನಿಂಗ್ ಮಾದರಿ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ."
         if is_kannada
         else "The trained deep learning model analyzes the image."
     )
