@@ -2,6 +2,17 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+from io import BytesIO
+
+try:
+    from streamlit_mic_recorder import speech_to_text
+except ImportError:
+    speech_to_text = None
+
+try:
+    from gtts import gTTS
+except ImportError:
+    gTTS = None
 
 
 # ============================================================
@@ -1151,6 +1162,56 @@ def get_chatbot_response(
 
 
 # ============================================================
+# VOICE FARMER ASSISTANT
+# ============================================================
+
+st.divider()
+
+if is_kannada:
+    st.markdown("## 🎙️ ಧ್ವನಿ ರೈತ ಸಹಾಯಕ")
+    st.write("ಮೈಕ್ರೊಫೋನ್ ಬಟನ್ ಒತ್ತಿ ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ. AI ಸಹಾಯಕ ಉತ್ತರವನ್ನು ನೀಡುತ್ತದೆ.")
+    voice_language = "kn-IN"
+    voice_start = "🎙️ ಧ್ವನಿಯಲ್ಲಿ ಪ್ರಶ್ನೆ ಕೇಳಿ"
+    voice_stop = "⏹️ ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ"
+else:
+    st.markdown("## 🎙️ Voice Farmer Assistant")
+    st.write("Click the microphone and ask your question. The assistant will answer using voice-friendly guidance.")
+    voice_language = "en-US"
+    voice_start = "🎙️ Ask by Voice"
+    voice_stop = "⏹️ Stop Recording"
+
+if speech_to_text is None:
+    st.error(
+        "Voice assistant package is not installed. Add streamlit-mic-recorder to requirements.txt and redeploy."
+    )
+    voice_question = None
+else:
+    voice_question = speech_to_text(
+        language=voice_language,
+        start_prompt=voice_start,
+        stop_prompt=voice_stop,
+        just_once=True,
+        use_container_width=True,
+        key="voice_assistant_kn" if is_kannada else "voice_assistant_en"
+    )
+
+if voice_question:
+    st.success(
+        ("🎤 ನೀವು ಕೇಳಿದ್ದು: " if is_kannada else "🎤 You asked: ") + voice_question
+    )
+
+if "last_voice_audio" not in st.session_state:
+    st.session_state.last_voice_audio = None
+
+if st.session_state.last_voice_audio:
+    st.audio(
+        st.session_state.last_voice_audio,
+        format="audio/mp3",
+        autoplay=False
+    )
+
+
+# ============================================================
 # QUICK QUESTIONS
 # ============================================================
 
@@ -1264,17 +1325,22 @@ for message in st.session_state.messages:
 # CHAT INPUT
 # ============================================================
 
-user_question = st.chat_input(
+typed_question = st.chat_input(
     "Ask your question..."
     if not is_kannada
     else
     "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
 )
 
+user_question = typed_question
 
 if selected_question is not None:
-
     user_question = selected_question
+
+elif not user_question and voice_question:
+    user_question = voice_question
+
+voice_used = bool(voice_question and not typed_question and selected_question is None)
 
 
 # ============================================================
@@ -1304,6 +1370,15 @@ if user_question:
         }
     )
 
+    # Create spoken answer when the question came from the microphone.
+    if voice_used and gTTS is not None:
+        try:
+            tts_language = "kn" if is_kannada else "en"
+            audio_buffer = BytesIO()
+            gTTS(text=response.replace("**", ""), lang=tts_language, slow=False).write_to_fp(audio_buffer)
+            st.session_state.last_voice_audio = audio_buffer.getvalue()
+        except Exception:
+            st.session_state.last_voice_audio = None
 
     st.rerun()
 
