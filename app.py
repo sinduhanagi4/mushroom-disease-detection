@@ -93,25 +93,12 @@ st.markdown(
 
     .hero-description {
         color: #ecfdf5;
+
         font-size: 17px;
+
         max-width: 750px;
+
         margin: auto;
-    }
-
-    .language-note {
-        text-align: center;
-        font-weight: 700;
-        color: #065f46;
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-
-    .farmer-highlight {
-        padding: 18px 22px;
-        border-radius: 18px;
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        margin: 12px 0 24px 0;
     }
 
     </style>
@@ -124,12 +111,10 @@ st.markdown(
 # LANGUAGE SELECTION
 # ============================================================
 
-st.markdown("### 🌐 Select Language / ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ")
 language = st.radio(
-    "Language / ಭಾಷೆ",
+    "🌐 Select Language / ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ",
     ["🇬🇧 English", "🇮🇳 ಕನ್ನಡ"],
-    horizontal=True,
-    label_visibility="collapsed"
+    horizontal=True
 )
 
 is_kannada = language == "🇮🇳 ಕನ್ನಡ"
@@ -164,14 +149,26 @@ else:
     )
 
 
-# Highlighted hero
-hero_left, hero_center, hero_right = st.columns([1, 4, 1])
+# Highlighted badge
+st.success(hero_badge)
 
-with hero_center:
-    st.success(hero_badge)
-    st.markdown(f"# {hero_title}")
-    st.markdown(f"### {hero_subtitle}")
-    st.write(hero_description)
+
+# Centered title
+left, center, right = st.columns([1, 3, 1])
+
+with center:
+
+    st.markdown(
+        f"## {hero_title}"
+    )
+
+    st.markdown(
+        f"### {hero_subtitle}"
+    )
+
+    st.write(
+        hero_description
+    )
 
 
 st.divider()
@@ -202,51 +199,6 @@ else:
 
     st.write(
         "Get smart support for mushroom farming in one place."
-    )
-
-
-# ============================================================
-# PROJECT SNAPSHOT
-# ============================================================
-
-stat1, stat2, stat3, stat4 = st.columns(4)
-
-with stat1:
-    st.metric(
-        "🦠 Supported Diseases" if not is_kannada else "🦠 ಪತ್ತೆಹಚ್ಚುವ ರೋಗಗಳು",
-        "5"
-    )
-
-with stat2:
-    st.metric(
-        "🖼️ Training Images" if not is_kannada else "🖼️ ತರಬೇತಿ ಚಿತ್ರಗಳು",
-        "3,195"
-    )
-
-with stat3:
-    st.metric(
-        "📐 Image Size" if not is_kannada else "📐 ಚಿತ್ರದ ಗಾತ್ರ",
-        "224 × 224"
-    )
-
-with stat4:
-    st.metric(
-        "🎯 Best Validation" if not is_kannada else "🎯 ಉತ್ತಮ Validation",
-        "92.62%"
-    )
-
-
-# ============================================================
-# FARMER HIGHLIGHT
-# ============================================================
-
-if is_kannada:
-    st.success(
-        "🧑‍🌾 **ರೈತ ಸ್ನೇಹಿ ಸಹಾಯ:** ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, AI ಫಲಿತಾಂಶ ನೋಡಿ ಮತ್ತು ಸರಳ ಕೃಷಿ ಸಲಹೆ ಪಡೆಯಿರಿ."
-    )
-else:
-    st.success(
-        "🧑‍🌾 **Farmer-friendly support:** Upload an image, view the AI result, and get simple cultivation guidance."
     )
 
 
@@ -322,33 +274,39 @@ feature1, feature2, feature3 = st.columns(3)
 with feature1:
 
     st.markdown(
-        "### 📷 Image Based"
+        "### 📷 ಚಿತ್ರ ಆಧಾರಿತ" if is_kannada else "### 📷 Image Based"
     )
 
     st.write(
-        "Upload a mushroom image for automatic analysis."
+        "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ವಿಶ್ಲೇಷಿಸಿ."
+        if is_kannada
+        else "Upload a mushroom image for automatic analysis."
     )
 
 
 with feature2:
 
     st.markdown(
-        "### 🤖 MobileNetV2"
+        "### 🤖 MobileNetV2 ಮಾದರಿ" if is_kannada else "### 🤖 MobileNetV2"
     )
 
     st.write(
-        "The trained deep learning model analyzes the image."
+        "ತರಬೇತಿ ಪಡೆದ Deep Learning ಮಾದರಿ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ."
+        if is_kannada
+        else "The trained deep learning model analyzes the image."
     )
 
 
 with feature3:
 
     st.markdown(
-        "### 🌾 Farmer Friendly"
+        "### 🌾 ರೈತ ಸ್ನೇಹಿ" if is_kannada else "### 🌾 Farmer Friendly"
     )
 
     st.write(
-        "Simple disease information and practical guidance."
+        "ಸರಳ ರೋಗ ಮಾಹಿತಿ ಮತ್ತು ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಪ್ರಾಯೋಗಿಕ ಸಲಹೆಗಳು."
+        if is_kannada
+        else "Simple disease information and practical guidance."
     )
 
 
@@ -865,162 +823,472 @@ st.info(
 
 st.divider()
 
+
+st.markdown(
+    '<div class="section-title">'
+    '💬 AI Farmer Assistant'
+    '</div>',
+    unsafe_allow_html=True
+)
+
+
 if is_kannada:
-    st.markdown("## 💬 AI ರೈತ ಸಹಾಯಕ")
-    st.write("ಮಶ್ರೂಮ್ ರೋಗಗಳು ಮತ್ತು ಕೃಷಿ ನಿರ್ವಹಣೆಯ ಬಗ್ಗೆ ಸರಳವಾಗಿ ಪ್ರಶ್ನೆ ಕೇಳಿ.")
-    st.info("👋 **ನಮಸ್ಕಾರ ರೈತರೆ!** ರೋಗ, ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ, ಗಾಳಿಯ ಹರಿವು ಅಥವಾ ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆ ಬಗ್ಗೆ ಕೇಳಿ.")
+
+    st.info(
+        "👋 **ನಮಸ್ಕಾರ ರೈತರೆ!**\n\n"
+        "ಮಶ್ರೂಮ್ ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ, "
+        "ತೇವಾಂಶ, ಗಾಳಿಯ ಹರಿವು ಮತ್ತು "
+        "ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+    )
+
 else:
-    st.markdown("## 💬 AI Farmer Assistant")
-    st.write("Ask simple questions about mushroom diseases and cultivation practices.")
-    st.info("👋 **Hello Farmer!** Ask about diseases, hygiene, moisture, ventilation or disease prevention.")
+
+    st.info(
+        "👋 **Hello Farmer!**\n\n"
+        "Ask about mushroom diseases, hygiene, "
+        "moisture, ventilation and disease prevention."
+    )
+
 
 # ============================================================
-# CHATBOT RESPONSE FUNCTION
+# CHATBOT FUNCTION
 # ============================================================
 
-def get_chatbot_response(question, kannada):
+def get_chatbot_response(
+    question,
+    kannada
+):
+
     q = question.lower()
 
-    if kannada:
-        if "ಬ್ಯಾಕ್ಟೀರಿಯಲ್" in q or "blotch" in q:
-            return "🦠 **ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್:**\n\nಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, ಹೆಚ್ಚುವರಿ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಸುಧಾರಿಸಿ."
-        if "ಡ್ರೈ ಬಬಲ್" in q:
-            return "⚪ **ಡ್ರೈ ಬಬಲ್:**\n\nಸೋಂಕಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಬೆಳೆಯುವ ಪ್ರದೇಶವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
-        if "ಕಾಬ್" in q or "cobweb" in q:
-            return "🕸️ **ಕಾಬ್‌ವೆಬ್:**\n\nಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
-        if "ವೆಟ್ ಬಬಲ್" in q:
-            return "💧 **ವೆಟ್ ಬಬಲ್:**\n\nಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆ ಹಾಗೂ ತೇವಾಂಶ ನಿಯಂತ್ರಣವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
-        if "ತಡೆ" in q or "prevent" in q:
-            return "🌱 **ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆ:**\n\nಉತ್ತಮ ಸ್ವಚ್ಛತೆ ಕಾಪಾಡಿಕೊಳ್ಳಿ, ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ, ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಇರಲಿ ಮತ್ತು ಮಶ್ರೂಮ್‌ಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
-        if "ಸ್ವಚ್ಛ" in q or "hygiene" in q:
-            return "🧼 ಬೆಳೆಯುವ ಕೊಠಡಿ, ಉಪಕರಣಗಳು ಮತ್ತು ಕೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
-        if "ತೇವಾಂಶ" in q or "moisture" in q:
-            return "💧 ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
-        if "ಗಾಳಿ" in q or "ವಾತಾಯನ" in q or "ventilation" in q:
-            return "🌬️ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಬೆಳೆಯುವ ಪರಿಸರವನ್ನು ಸೂಕ್ತವಾಗಿಡಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
-        if "ಫೋಟೋ" in q or "ಚಿತ್ರ" in q:
-            return "📷 ಉತ್ತಮ ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಲು ಉತ್ತಮ ಬೆಳಕನ್ನು ಬಳಸಿ. ಮಶ್ರೂಮ್ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಬೇಕು ಮತ್ತು ಚಿತ್ರ ಮಸುಕಾಗಿರಬಾರದು."
-        return "🌱 ದಯವಿಟ್ಟು ರೋಗ, ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ, ಗಾಳಿಯ ಹರಿವು ಅಥವಾ ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
 
-    if "bacterial" in q or "blotch" in q:
-        return "🦠 **Bacterial Blotch:**\n\nMaintain hygiene, avoid excess surface moisture and improve ventilation."
-    if "dry bubble" in q:
-        return "⚪ **Dry Bubble:**\n\nCarefully remove affected mushrooms and maintain good growing-room hygiene."
-    if "cobweb" in q:
-        return "🕸️ **Cobweb:**\n\nRemove affected areas, maintain cleanliness and avoid excessive humidity."
-    if "wet bubble" in q:
-        return "💧 **Wet Bubble:**\n\nCarefully remove infected material and maintain hygiene and moisture control."
-    if "prevent" in q or "prevention" in q:
-        return "🌱 **Disease Prevention:**\n\nMaintain good hygiene, avoid excessive moisture, provide suitable ventilation and inspect mushrooms regularly."
-    if "hygiene" in q or "clean" in q:
-        return "🧼 Keep the growing room, tools and hands clean."
-    if "moisture" in q or "humidity" in q:
-        return "💧 Avoid excessive surface moisture and maintain suitable moisture conditions."
-    if "ventilation" in q or "air" in q:
-        return "🌬️ Good air circulation helps maintain a suitable growing environment."
-    if "photo" in q or "picture" in q or "image" in q:
-        return "📷 **Good Mushroom Photo:**\n\nUse good lighting, keep the mushroom clearly visible and avoid blurry images."
-    return "🌱 Ask me about diseases, prevention, hygiene, moisture, ventilation or taking a good mushroom photo."
+    # ========================================================
+    # KANNADA
+    # ========================================================
+
+    if kannada:
+
+        if (
+            "ಬ್ಯಾಕ್ಟೀರಿಯಲ್" in q
+            or
+            "blotch" in q
+        ):
+
+            return (
+                "🦠 **ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್:**\n\n"
+                "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, "
+                "ಹೆಚ್ಚುವರಿ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ "
+                "ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಸುಧಾರಿಸಿ."
+            )
+
+
+        if "ಡ್ರೈ ಬಬಲ್" in q:
+
+            return (
+                "⚪ **ಡ್ರೈ ಬಬಲ್:**\n\n"
+                "ಸೋಂಕಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ "
+                "ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಬೆಳೆಯುವ ಪ್ರದೇಶವನ್ನು "
+                "ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            )
+
+
+        if (
+            "ಕಾಬ್" in q
+            or
+            "cobweb" in q
+        ):
+
+            return (
+                "🕸️ **ಕಾಬ್‌ವೆಬ್:**\n\n"
+                "ಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, "
+                "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು "
+                "ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
+            )
+
+
+        if "ವೆಟ್ ಬಬಲ್" in q:
+
+            return (
+                "💧 **ವೆಟ್ ಬಬಲ್:**\n\n"
+                "ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ "
+                "ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆ ಹಾಗೂ "
+                "ತೇವಾಂಶ ನಿಯಂತ್ರಣವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+            )
+
+
+        if (
+            "ತಡೆ" in q
+            or
+            "prevent" in q
+        ):
+
+            return (
+                "🌱 **ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆ:**\n\n"
+                "ಉತ್ತಮ ಸ್ವಚ್ಛತೆ ಕಾಪಾಡಿಕೊಳ್ಳಿ, "
+                "ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ, "
+                "ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಇರಲಿ ಮತ್ತು "
+                "ಮಶ್ರೂಮ್‌ಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+            )
+
+
+        if (
+            "ಸ್ವಚ್ಛ" in q
+            or
+            "hygiene" in q
+        ):
+
+            return (
+                "🧼 ಬೆಳೆಯುವ ಕೊಠಡಿ, ಉಪಕರಣಗಳು "
+                "ಮತ್ತು ಕೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            )
+
+
+        if (
+            "ತೇವಾಂಶ" in q
+            or
+            "moisture" in q
+        ):
+
+            return (
+                "💧 ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು "
+                "ತಪ್ಪಿಸಿ ಮತ್ತು ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು "
+                "ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+            )
+
+
+        if (
+            "ಗಾಳಿ" in q
+            or
+            "ವಾತಾಯನ" in q
+            or
+            "ventilation" in q
+        ):
+
+            return (
+                "🌬️ ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು "
+                "ಬೆಳೆಯುವ ಪರಿಸರವನ್ನು ಸೂಕ್ತವಾಗಿಡಲು "
+                "ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+            )
+
+
+        if (
+            "ಫೋಟೋ" in q
+            or
+            "ಚಿತ್ರ" in q
+        ):
+
+            return (
+                "📷 ಉತ್ತಮ ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಲು "
+                "ಉತ್ತಮ ಬೆಳಕನ್ನು ಬಳಸಿ. "
+                "ಮಶ್ರೂಮ್ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಬೇಕು "
+                "ಮತ್ತು ಚಿತ್ರ ಮಸುಕಾಗಿರಬಾರದು."
+            )
+
+
+        return (
+            "🌱 ದಯವಿಟ್ಟು ರೋಗ, ಸ್ವಚ್ಛತೆ, "
+            "ತೇವಾಂಶ, ಗಾಳಿಯ ಹರಿವು ಅಥವಾ "
+            "ರೋಗ ತಡೆಗಟ್ಟುವಿಕೆಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+        )
+
+
+    # ========================================================
+    # ENGLISH
+    # ========================================================
+
+    else:
+
+        if (
+            "bacterial" in q
+            or
+            "blotch" in q
+        ):
+
+            return (
+                "🦠 **Bacterial Blotch:**\n\n"
+                "Maintain hygiene, avoid excess surface "
+                "moisture and improve ventilation."
+            )
+
+
+        if "dry bubble" in q:
+
+            return (
+                "⚪ **Dry Bubble:**\n\n"
+                "Carefully remove affected mushrooms "
+                "and maintain good growing-room hygiene."
+            )
+
+
+        if "cobweb" in q:
+
+            return (
+                "🕸️ **Cobweb:**\n\n"
+                "Remove affected areas, maintain "
+                "cleanliness and avoid excessive humidity."
+            )
+
+
+        if "wet bubble" in q:
+
+            return (
+                "💧 **Wet Bubble:**\n\n"
+                "Carefully remove infected material "
+                "and maintain hygiene and moisture control."
+            )
+
+
+        if (
+            "prevent" in q
+            or
+            "prevention" in q
+        ):
+
+            return (
+                "🌱 **Disease Prevention:**\n\n"
+                "Maintain good hygiene, avoid excessive "
+                "moisture, provide suitable ventilation "
+                "and inspect mushrooms regularly."
+            )
+
+
+        if (
+            "hygiene" in q
+            or
+            "clean" in q
+        ):
+
+            return (
+                "🧼 Keep the growing room, tools "
+                "and hands clean."
+            )
+
+
+        if (
+            "moisture" in q
+            or
+            "humidity" in q
+        ):
+
+            return (
+                "💧 Avoid excessive surface moisture "
+                "and maintain suitable moisture conditions."
+            )
+
+
+        if (
+            "ventilation" in q
+            or
+            "air" in q
+        ):
+
+            return (
+                "🌬️ Good air circulation helps "
+                "maintain a suitable growing environment."
+            )
+
+
+        if (
+            "photo" in q
+            or
+            "picture" in q
+            or
+            "image" in q
+        ):
+
+            return (
+                "📷 **Good Mushroom Photo:**\n\n"
+                "Use good lighting, keep the mushroom "
+                "clearly visible and avoid blurry images."
+            )
+
+
+        return (
+            "🌱 Ask me about diseases, prevention, "
+            "hygiene, moisture, ventilation or "
+            "taking a good mushroom photo."
+        )
+
 
 # ============================================================
 # QUICK QUESTIONS
 # ============================================================
 
 if is_kannada:
+
     quick_questions = [
+
         "🦠 ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಎಂದರೇನು?",
+
         "⚪ ಡ್ರೈ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "🕸️ ಕಾಬ್‌ವೆಬ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "💧 ವೆಟ್ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+
         "🌱 ರೋಗಗಳನ್ನು ಹೇಗೆ ತಡೆಯುವುದು?",
+
         "🧼 ಸ್ವಚ್ಛತೆಯನ್ನು ಹೇಗೆ ಕಾಪಾಡುವುದು?",
+
         "💧 ತೇವಾಂಶವನ್ನು ಹೇಗೆ ನಿಯಂತ್ರಿಸುವುದು?",
+
         "🌬️ ಗಾಳಿಯ ಹರಿವು ಏಕೆ ಮುಖ್ಯ?",
+
         "📷 ಉತ್ತಮ ಫೋಟೋ ಹೇಗೆ ತೆಗೆದುಕೊಳ್ಳುವುದು?"
     ]
+
 else:
+
     quick_questions = [
+
         "🦠 What is Bacterial Blotch?",
+
         "⚪ Tell me about Dry Bubble",
+
         "🕸️ Tell me about Cobweb",
+
         "💧 Tell me about Wet Bubble",
+
         "🌱 How can I prevent diseases?",
+
         "🧼 How should I maintain hygiene?",
+
         "💧 How can I control moisture?",
+
         "🌬️ Why is ventilation important?",
+
         "📷 How should I take a good photo?"
     ]
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# ============================================================
-# QUICK QUESTION CARDS
-# ============================================================
-
-st.markdown("### ⚡ Quick Questions")
-
-q1, q2, q3 = st.columns(3)
-selected_question = None
-
-for i, question in enumerate(quick_questions):
-    column = [q1, q2, q3][i % 3]
-    with column:
-        if st.button(question, use_container_width=True, key=f"quick_{i}"):
-            selected_question = question
 
 # ============================================================
 # CHAT HISTORY
 # ============================================================
 
-if not st.session_state.messages:
-    if is_kannada:
-        st.success("💡 **ಪ್ರಾರಂಭಿಸಲು ಮೇಲಿನ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಒಂದನ್ನು ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಕೆಳಗೆ ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ.**")
-    else:
-        st.success("💡 **Choose a question above or type your own question below to get started.**")
+if "messages" not in st.session_state:
+
+    st.session_state.messages = []
+
+
+# ============================================================
+# QUICK QUESTION BUTTONS
+# ============================================================
+
+st.subheader("⚡ Quick Questions")
+
+
+q1, q2, q3 = st.columns(3)
+
+
+selected_question = None
+
+
+for i, question in enumerate(
+    quick_questions
+):
+
+    column = [
+        q1,
+        q2,
+        q3
+    ][i % 3]
+
+
+    with column:
+
+        if st.button(
+            question,
+            use_container_width=True,
+            key=f"quick_{i}"
+        ):
+
+            selected_question = question
+
+
+# ============================================================
+# CHAT HISTORY
+# ============================================================
 
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+
+    with st.chat_message(
+        message["role"]
+    ):
+
+        st.markdown(
+            message["content"]
+        )
+
 
 # ============================================================
 # CHAT INPUT
 # ============================================================
 
 user_question = st.chat_input(
-    "Ask your question..." if not is_kannada else "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
+    "Ask your question..."
+    if not is_kannada
+    else
+    "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
 )
 
+
 if selected_question is not None:
+
     user_question = selected_question
 
+
+# ============================================================
+# PROCESS QUESTION
+# ============================================================
+
 if user_question:
-    st.session_state.messages.append({"role": "user", "content": user_question})
-    response = get_chatbot_response(user_question, is_kannada)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": user_question
+        }
+    )
+
+
+    response = get_chatbot_response(
+        user_question,
+        is_kannada
+    )
+
+
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": response
+        }
+    )
+
+
     st.rerun()
 
+
 # ============================================================
-# CHAT CONTROLS
+# CLEAR CHAT
 # ============================================================
 
-if st.session_state.messages:
-    clear_col, help_col = st.columns([1, 3])
-    with clear_col:
-        if st.button(
-            "🗑️ Clear Chat" if not is_kannada else "🗑️ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ",
-            use_container_width=True
-        ):
-            st.session_state.messages = []
-            st.rerun()
-    with help_col:
-        st.caption(
-            "🌱 AI gives preliminary guidance. For serious crop problems, consult an agricultural expert."
-            if not is_kannada
-            else
-            "🌱 AI ಪ್ರಾಥಮಿಕ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ. ಗಂಭೀರ ಸಮಸ್ಯೆಗಳಿಗೆ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
-        )
+if len(
+    st.session_state.messages
+) > 0:
 
+    if st.button(
+        "🗑️ Clear Chat"
+        if not is_kannada
+        else
+        "🗑️ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ"
+    ):
+
+        st.session_state.messages = []
+
+        st.rerun()
+
+
+# ============================================================
 # DISCLAIMER
 # ============================================================
 
