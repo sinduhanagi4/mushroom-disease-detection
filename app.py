@@ -1,9 +1,10 @@
 
 import os
+from pathlib import Path
+
 import streamlit as st
 import numpy as np
 from PIL import Image, ImageOps
-from pathlib import Path
 
 # --------------------------------------------------
 # 1. PAGE SETTINGS
@@ -19,109 +20,107 @@ st.set_page_config(
 MODEL_PATH = Path(__file__).parent / "mushroom_disease_mobilenetv2.keras"
 
 # --------------------------------------------------
-# 2. LANGUAGE SELECTION
+# 2. DESIGN
+# --------------------------------------------------
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
+}
+
+.stApp {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+}
+
+.block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    max-width: 1200px;
+}
+
+.hero {
+    background: linear-gradient(120deg, #064e3b, #047857, #10b981);
+    padding: 42px 35px;
+    border-radius: 24px;
+    color: white;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    color: white;
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.hero p {
+    color: #ecfdf5;
+    font-size: 16px;
+}
+
+.small-badge {
+    background: rgba(255,255,255,0.18);
+    display: inline-block;
+    padding: 7px 15px;
+    border-radius: 30px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.info-card {
+    background: white;
+    border: 1px solid #d1fae5;
+    border-radius: 17px;
+    padding: 20px;
+    min-height: 135px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.info-card h3 {
+    color: #065f46;
+    font-size: 18px;
+}
+
+.info-card p {
+    color: #475569;
+    font-size: 14px;
+}
+
+.section-title {
+    color: #065f46;
+    font-size: 25px;
+    font-weight: 700;
+    margin-top: 25px;
+}
+
+.advice-card {
+    background: #ecfdf5;
+    border-left: 5px solid #059669;
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 25px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------------------------
+# 3. LANGUAGE SELECTION
 # --------------------------------------------------
 
 if "language" not in st.session_state:
     st.session_state.language = "English"
 
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-
-    html, body, [class*="css"] {
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .stApp {
-        background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
-    }
-
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 1200px;
-    }
-
-    .hero {
-        background: linear-gradient(120deg, #064e3b, #047857, #10b981);
-        padding: 42px 35px;
-        border-radius: 24px;
-        color: white;
-        margin-bottom: 25px;
-    }
-
-    .hero h1 {
-        color: white;
-        font-size: 38px;
-        font-weight: 800;
-    }
-
-    .hero p {
-        color: #ecfdf5;
-        font-size: 16px;
-    }
-
-    .small-badge {
-        background: rgba(255,255,255,0.18);
-        display: inline-block;
-        padding: 7px 15px;
-        border-radius: 30px;
-        font-size: 13px;
-        margin-bottom: 12px;
-    }
-
-    .info-card {
-        background: white;
-        border: 1px solid #d1fae5;
-        border-radius: 17px;
-        padding: 20px;
-        min-height: 135px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    }
-
-    .info-card h3 {
-        color: #065f46;
-        font-size: 18px;
-    }
-
-    .info-card p {
-        color: #475569;
-        font-size: 14px;
-    }
-
-    .section-title {
-        color: #065f46;
-        font-size: 25px;
-        font-weight: 700;
-        margin-top: 25px;
-    }
-
-    .advice-card {
-        background: #ecfdf5;
-        border-left: 5px solid #059669;
-        padding: 18px;
-        border-radius: 10px;
-        margin-top: 12px;
-    }
-
-    footer {
-        text-align: center;
-        color: #64748b;
-        padding: 25px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Language selector at the top
-language_options = ["English", "ಕನ್ನಡ"]
-
 selected_language = st.radio(
     "🌐 Select Language / ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    language_options,
+    ["English", "ಕನ್ನಡ"],
     horizontal=True,
     index=0 if st.session_state.language == "English" else 1
 )
@@ -133,7 +132,7 @@ st.session_state.language = (
 EN = st.session_state.language == "English"
 
 # --------------------------------------------------
-# 3. TEXT TRANSLATIONS
+# 4. TRANSLATIONS
 # --------------------------------------------------
 
 if EN:
@@ -164,30 +163,25 @@ else:
     welcome = "ಸ್ವಾಗತ! ರೋಗ ಪತ್ತೆ ಮಾಡಲು ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
 
 # --------------------------------------------------
-# 4. HERO SECTION
+# 5. HERO SECTION
 # --------------------------------------------------
 
-st.markdown(
-    f"""
-    <div class="hero">
-        <div class="small-badge">
-            🌱 AI Powered Agriculture • Smart Farming
-        </div>
-        <h1>🍄 {page_title}</h1>
-        <p>{subtitle}</p>
-        <p>
-            Identify common mushroom diseases using deep learning
-            and receive farmer-friendly guidance.
-        </p>
+st.markdown(f"""
+<div class="hero">
+    <div class="small-badge">
+        🌱 AI Powered Agriculture • Smart Farming
     </div>
-    """,
-    unsafe_allow_html=True
-)
+    <h1>🍄 {page_title}</h1>
+    <p>{subtitle}</p>
+    <p>Identify common mushroom diseases using deep learning
+    and receive farmer-friendly guidance.</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.info(welcome)
 
 # --------------------------------------------------
-# 5. DASHBOARD
+# 6. DASHBOARD
 # --------------------------------------------------
 
 st.markdown(
@@ -197,52 +191,24 @@ st.markdown(
 
 col1, col2, col3, col4 = st.columns(4)
 
-with col1:
-    st.markdown(
-        """
-        <div class="info-card">
-            <h3>🔬 Disease Detection</h3>
-            <p>Identify mushroom diseases from uploaded images.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+cards = [
+    ("🔬 Disease Detection", "Identify mushroom diseases from uploaded images."),
+    ("🌱 Farmer Guidance", "Get basic information and suggested precautions."),
+    ("🌐 Two Languages", "Use the application in English or Kannada."),
+    ("🤖 Farmer Assistant", "Ask questions about mushroom cultivation.")
+]
 
-with col2:
-    st.markdown(
-        """
+for column, card in zip([col1, col2, col3, col4], cards):
+    with column:
+        st.markdown(f"""
         <div class="info-card">
-            <h3>🌱 Farmer Guidance</h3>
-            <p>Get basic information and suggested precautions.</p>
+            <h3>{card[0]}</h3>
+            <p>{card[1]}</p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-with col3:
-    st.markdown(
-        """
-        <div class="info-card">
-            <h3>🌐 Two Languages</h3>
-            <p>Use the application in English or Kannada.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-with col4:
-    st.markdown(
-        """
-        <div class="info-card">
-            <h3>🤖 Farmer Assistant</h3>
-            <p>Ask common questions about mushroom cultivation.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 6. DISEASE CLASSES AND FARMER ADVICE
+# 7. DISEASE CLASSES
 # --------------------------------------------------
 
 class_names = [
@@ -265,31 +231,31 @@ advice_english = {
     "Healthy": [
         "The mushroom is classified as healthy by the model.",
         "Continue maintaining clean growing conditions.",
-        "Monitor the crop regularly for any unusual changes."
+        "Monitor the crop regularly."
     ],
     "Bacterial Blotch": [
         "Avoid excess moisture on mushroom caps.",
-        "Maintain suitable ventilation in the growing room.",
+        "Maintain suitable ventilation.",
         "Keep equipment and surfaces clean.",
-        "Remove affected mushrooms carefully and seek expert advice."
+        "Seek expert advice if the disease spreads."
     ],
     "Dry Bubble": [
         "Remove affected mushrooms carefully.",
         "Clean tools and growing-room surfaces.",
         "Avoid spreading contaminated material.",
-        "Consult a mushroom cultivation expert for treatment advice."
+        "Consult a mushroom cultivation expert."
     ],
     "Cobweb Disease": [
         "Remove affected material carefully.",
         "Improve air circulation where appropriate.",
         "Maintain cleanliness in the growing area.",
-        "Seek advice from an agricultural expert."
+        "Seek agricultural expert advice."
     ],
     "Wet Bubble": [
-        "Remove affected mushrooms and contaminated material carefully.",
+        "Remove affected mushrooms carefully.",
         "Clean and disinfect tools and surfaces appropriately.",
-        "Avoid moving contaminated material around the growing room.",
-        "Consult an agricultural expert for further guidance."
+        "Avoid moving contaminated material around.",
+        "Consult an agricultural expert."
     ]
 }
 
@@ -301,7 +267,7 @@ advice_kannada = {
     ],
     "Bacterial Blotch": [
         "ಮಶ್ರೂಮ್ ಮೇಲ್ಭಾಗದಲ್ಲಿ ಹೆಚ್ಚಿನ ತೇವಾಂಶ ಇರದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
-        "ಬೆಳೆಸುವ ಕೋಣೆಯಲ್ಲಿ ಸೂಕ್ತ ಗಾಳಿಯ ಸಂಚಾರ ಇರಲಿ.",
+        "ಸೂಕ್ತ ಗಾಳಿಯ ಸಂಚಾರ ಇರಲಿ.",
         "ಉಪಕರಣಗಳು ಮತ್ತು ಮೇಲ್ಮೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
         "ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
     ],
@@ -326,12 +292,12 @@ advice_kannada = {
 }
 
 # --------------------------------------------------
-# 7. LAZY MODEL LOADING
+# 8. LOAD AI MODEL ONLY WHEN NEEDED
 # --------------------------------------------------
 
 @st.cache_resource(show_spinner=False)
 def load_mushroom_model(model_path):
-    # TensorFlow is imported only when prediction is requested.
+
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -343,11 +309,13 @@ def load_mushroom_model(model_path):
     except Exception:
         pass
 
-    model = tf.keras.models.load_model(model_path, compile=False)
-    return model
+    return tf.keras.models.load_model(
+        model_path,
+        compile=False
+    )
 
 # --------------------------------------------------
-# 8. IMAGE UPLOAD AND PREDICTION
+# 9. IMAGE UPLOAD AND PREDICTION
 # --------------------------------------------------
 
 st.markdown(
@@ -387,15 +355,17 @@ if uploaded_file is not None:
 
             if not MODEL_PATH.exists():
                 st.error(
-                    "Model file not found. Please check that "
-                    "mushroom_disease_mobilenetv2.keras is in your GitHub repository."
+                    "Model file not found. Check that "
+                    "mushroom_disease_mobilenetv2.keras "
+                    "is in your GitHub repository."
                 )
 
             else:
                 try:
                     with st.spinner(
-                        "Loading the AI model and analysing the image..."
+                        "Loading AI model and analysing image..."
                     ):
+
                         model = load_mushroom_model(str(MODEL_PATH))
 
                         resized_image = image.resize((224, 224))
@@ -406,12 +376,21 @@ if uploaded_file is not None:
                         )
 
                         image_array = image_array / 255.0
-                        image_array = np.expand_dims(image_array, axis=0)
+                        image_array = np.expand_dims(
+                            image_array,
+                            axis=0
+                        )
 
                         predictions = model.predict(
                             image_array,
                             verbose=0
                         )
+
+                        if predictions.shape[-1] != len(class_names):
+                            raise ValueError(
+                                "The model output does not contain "
+                                "the expected five classes."
+                            )
 
                         predicted_index = int(
                             np.argmax(predictions[0])
@@ -433,8 +412,8 @@ if uploaded_file is not None:
                         )
                     else:
                         st.subheader(
-                            f"ಪತ್ತೆಯಾದ ವರ್ಗ: "
-                            f"{kannada_names[predicted_class]}"
+                            "ಪತ್ತೆಯಾದ ವರ್ಗ: "
+                            + kannada_names[predicted_class]
                         )
 
                     st.metric(
@@ -450,32 +429,25 @@ if uploaded_file is not None:
 
                     advice_list = (
                         advice_english[predicted_class]
-                        if EN
-                        else advice_kannada[predicted_class]
-                    )
-
-                    st.markdown(
-                        '<div class="advice-card">',
-                        unsafe_allow_html=True
+                        if EN else advice_kannada[predicted_class]
                     )
 
                     for advice in advice_list:
-                        st.write("• " + advice)
-
-                    st.markdown("</div>", unsafe_allow_html=True)
+                        st.markdown(
+                            f'<div class="advice-card">{advice}</div>',
+                            unsafe_allow_html=True
+                        )
 
                     st.caption(
                         "This is an AI prediction, not a laboratory diagnosis. "
-                        "Consult an agricultural expert before taking treatment decisions."
+                        "Consult an agricultural expert before treatment decisions."
                         if EN else
-                        "ಇದು AI ಆಧಾರಿತ ಅಂದಾಜು ಮಾತ್ರ. ಚಿಕಿತ್ಸಾ ನಿರ್ಧಾರಕ್ಕೆ ಮೊದಲು ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+                        "ಇದು AI ಆಧಾರಿತ ಅಂದಾಜು ಮಾತ್ರ. "
+                        "ಚಿಕಿತ್ಸಾ ನಿರ್ಧಾರಕ್ಕೆ ಮೊದಲು ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
                     )
 
                 except Exception as error:
-                    st.error(
-                        "Prediction failed. Please check the model file "
-                        "and application logs."
-                    )
+                    st.error("Prediction failed. Please check the model and logs.")
                     st.exception(error)
 
     except Exception:
@@ -484,7 +456,7 @@ if uploaded_file is not None:
         )
 
 # --------------------------------------------------
-# 9. SUPPORTED DISEASES
+# 10. SUPPORTED DISEASES
 # --------------------------------------------------
 
 st.markdown(
@@ -499,25 +471,21 @@ for index, disease in enumerate(class_names):
         display_name = (
             disease if EN else kannada_names[disease]
         )
-        st.markdown(
-            f"""
-            <div class="info-card">
-                <h3>{index + 1}. {display_name}</h3>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+
+        st.markdown(f"""
+        <div class="info-card">
+            <h3>{index + 1}. {display_name}</h3>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 10. HOW IT WORKS
+# 11. HOW IT WORKS
 # --------------------------------------------------
 
 st.markdown(
     f'<div class="section-title">{how_title}</div>',
     unsafe_allow_html=True
 )
-
-step1, step2, step3, step4 = st.columns(4)
 
 if EN:
     steps = [
@@ -534,20 +502,19 @@ else:
         ("📊 ಹಂತ 4", "ರೋಗದ ವರ್ಗವನ್ನು ತೋರಿಸಲಾಗುತ್ತದೆ.")
     ]
 
-for column, step in zip([step1, step2, step3, step4], steps):
+step_columns = st.columns(4)
+
+for column, step in zip(step_columns, steps):
     with column:
-        st.markdown(
-            f"""
-            <div class="info-card">
-                <h3>{step[0]}</h3>
-                <p>{step[1]}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        st.markdown(f"""
+        <div class="info-card">
+            <h3>{step[0]}</h3>
+            <p>{step[1]}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 11. RULE-BASED FARMER ASSISTANT
+# 12. FARMER ASSISTANT CHATBOT
 # --------------------------------------------------
 
 st.markdown(
@@ -557,7 +524,9 @@ st.markdown(
 
 st.write(chatbot_help)
 
+
 def farmer_answer(question, english=True):
+
     q = question.lower()
 
     if any(word in q for word in ["hello", "hi", "ನಮಸ್ಕಾರ"]):
@@ -572,7 +541,7 @@ def farmer_answer(question, english=True):
             "Healthy mushrooms should be grown in clean conditions. "
             "Monitor them regularly."
             if english else
-            "ಆರೋಗ್ಯಕರ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಸ್ವಚ್ಛ ಪರಿಸರದಲ್ಲಿ ಬೆಳೆಸಿ. ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+            "ಆರೋಗ್ಯಕರ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಸ್ವಚ್ಛ ಪರಿಸರದಲ್ಲಿ ಬೆಳೆಸಿ."
         )
 
     if any(word in q for word in ["blotch", "ಬ್ಲಾಚ್"]):
@@ -580,7 +549,7 @@ def farmer_answer(question, english=True):
             "For bacterial blotch, avoid excess moisture, maintain ventilation "
             "and clean the growing area."
             if english else
-            "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಸಮಸ್ಯೆಗೆ ಹೆಚ್ಚಿನ ತೇವಾಂಶ ತಪ್ಪಿಸಿ ಮತ್ತು ಸ್ಥಳವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+            "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಸಮಸ್ಯೆಗೆ ಹೆಚ್ಚಿನ ತೇವಾಂಶ ತಪ್ಪಿಸಿ."
         )
 
     if any(word in q for word in ["dry bubble", "ಡ್ರೈ ಬಬಲ್"]):
@@ -588,7 +557,7 @@ def farmer_answer(question, english=True):
             "Remove affected mushrooms carefully, clean tools and consult "
             "a mushroom cultivation expert."
             if english else
-            "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ, ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
+            "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
         )
 
     if any(word in q for word in ["cobweb", "ಕಾಬ್"]):
@@ -596,15 +565,15 @@ def farmer_answer(question, english=True):
             "Remove affected material carefully, maintain cleanliness "
             "and seek expert advice."
             if english else
-            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, ಸ್ವಚ್ಛತೆ ಕಾಪಾಡಿ ಮತ್ತು ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆ ಕಾಪಾಡಿ."
         )
 
     if any(word in q for word in ["wet bubble", "ವೆಟ್ ಬಬಲ್"]):
         return (
-            "Remove affected material carefully and disinfect tools and surfaces "
-            "appropriately. Consult an expert."
+            "Remove affected material carefully and clean tools and surfaces. "
+            "Consult an expert."
             if english else
-            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
+            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
         )
 
     if any(word in q for word in ["water", "moisture", "ತೇವಾಂಶ", "ನೀರು"]):
@@ -638,6 +607,7 @@ def farmer_answer(question, english=True):
         "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯ, ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ ಮತ್ತು ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
     )
 
+
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
@@ -652,70 +622,20 @@ user_question = st.chat_input(
 )
 
 if user_question:
-    st.session_state.chat_history.append(
-        {"role": "user", "content": user_question}
-    )
+
+    st.session_state.chat_history.append({
+        "role": "user",
+        "content": user_question
+    })
 
     answer = farmer_answer(user_question, EN)
 
-    st.session_state.chat_history.append(
-        {"role": "assistant", "content": answer}
-    )
+    st.session_state.chat_history.append({
+        "role": "assistant",
+        "content": answer
+    })
 
     st.rerun()
-
-# --------------------------------------------------
-# 12. OPTIONAL VOICE ASSISTANT
-# --------------------------------------------------
-
-st.markdown("### 🎤 Voice Farmer Assistant")
-
-try:
-    from streamlit_mic_recorder import speech_to_text
-    from gtts import gTTS
-    from io import BytesIO
-
-    voice_language = "en" if EN else "kn"
-
-    spoken_question = speech_to_text(
-        language="en-US" if EN else "kn-IN",
-        just_once=True,
-        key="voice_input"
-    )
-
-    if spoken_question:
-        st.write("You said:", spoken_question)
-
-        spoken_answer = farmer_answer(spoken_question, EN)
-
-        st.write("Assistant:", spoken_answer)
-
-        audio_buffer = BytesIO()
-
-        tts = gTTS(
-            text=spoken_answer,
-            lang=voice_language
-        )
-
-        tts.write_to_fp(audio_buffer)
-        audio_buffer.seek(0)
-
-        st.audio(
-            audio_buffer,
-            format="audio/mp3"
-        )
-
-except ImportError:
-    st.info(
-        "Voice assistant packages are not installed. "
-        "You can still use the text Farmer Assistant."
-    )
-
-except Exception:
-    st.info(
-        "Voice input is not available in this browser. "
-        "Please use the text Farmer Assistant."
-    )
 
 # --------------------------------------------------
 # 13. FOOTER
@@ -723,13 +643,10 @@ except Exception:
 
 st.markdown("---")
 
-st.markdown(
-    f"""
-    <footer>
-        <h4>🍄 Mushroom AI Assistant</h4>
-        <p>{footer_text}</p>
-        <p>Developed using Python, TensorFlow, MobileNetV2 and Streamlit.</p>
-    </footer>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown(f"""
+<footer>
+    <h4>🍄 Mushroom AI Assistant</h4>
+    <p>{footer_text}</p>
+    <p>Developed using Python, TensorFlow, MobileNetV2 and Streamlit.</p>
+</footer>
+""", unsafe_allow_html=True)
