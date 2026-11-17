@@ -3,5 +3,3 @@ streamlit
 tensorflow==2.20.0
 numpy<2.2
 pillow
-streamlit-mic-recorder==0.0.8
-gTTS
