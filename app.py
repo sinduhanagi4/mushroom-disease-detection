@@ -1,22 +1,14 @@
 
+import os
 import streamlit as st
-import tensorflow as tf
 import numpy as np
-from PIL import Image
-from io import BytesIO
+from PIL import Image, ImageOps
+from pathlib import Path
 
-try:
-    from streamlit_mic_recorder import speech_to_text
-except ImportError:
-    speech_to_text = None
+# --------------------------------------------------
+# 1. PAGE SETTINGS
+# --------------------------------------------------
 
-try:
-    from gtts import gTTS
-except ImportError:
-    gTTS = None
-
-
-# PAGE CONFIGURATION
 st.set_page_config(
     page_title="Mushroom AI Assistant",
     page_icon="🍄",
@@ -24,124 +16,240 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# PAGE DESIGN
-st.markdown("""
-<style>
-.stApp {
-    background-color: #f0fdf4;
-}
-.main-title {
-    color: #065f46;
-    text-align: center;
-    font-size: 38px;
-    font-weight: 800;
-}
-.sub-title {
-    color: #047857;
-    text-align: center;
-    font-size: 21px;
-    font-weight: 600;
-}
-</style>
-""", unsafe_allow_html=True)
+MODEL_PATH = Path(__file__).parent / "mushroom_disease_mobilenetv2.keras"
 
+# --------------------------------------------------
+# 2. LANGUAGE SELECTION
+# --------------------------------------------------
 
-# LANGUAGE SELECTION
-language = st.radio(
-    "🌐 Select Language / ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ",
-    ["🇬🇧 English", "🇮🇳 ಕನ್ನಡ"],
-    horizontal=True
+if "language" not in st.session_state:
+    st.session_state.language = "English"
+
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .stApp {
+        background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    }
+
+    .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }
+
+    .hero {
+        background: linear-gradient(120deg, #064e3b, #047857, #10b981);
+        padding: 42px 35px;
+        border-radius: 24px;
+        color: white;
+        margin-bottom: 25px;
+    }
+
+    .hero h1 {
+        color: white;
+        font-size: 38px;
+        font-weight: 800;
+    }
+
+    .hero p {
+        color: #ecfdf5;
+        font-size: 16px;
+    }
+
+    .small-badge {
+        background: rgba(255,255,255,0.18);
+        display: inline-block;
+        padding: 7px 15px;
+        border-radius: 30px;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .info-card {
+        background: white;
+        border: 1px solid #d1fae5;
+        border-radius: 17px;
+        padding: 20px;
+        min-height: 135px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .info-card h3 {
+        color: #065f46;
+        font-size: 18px;
+    }
+
+    .info-card p {
+        color: #475569;
+        font-size: 14px;
+    }
+
+    .section-title {
+        color: #065f46;
+        font-size: 25px;
+        font-weight: 700;
+        margin-top: 25px;
+    }
+
+    .advice-card {
+        background: #ecfdf5;
+        border-left: 5px solid #059669;
+        padding: 18px;
+        border-radius: 10px;
+        margin-top: 12px;
+    }
+
+    footer {
+        text-align: center;
+        color: #64748b;
+        padding: 25px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
-is_kannada = language == "🇮🇳 ಕನ್ನಡ"
+# Language selector at the top
+language_options = ["English", "ಕನ್ನಡ"]
 
-if is_kannada:
-    title = "🍄 ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
-    subtitle = "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತ ಸಹಾಯ"
-    description = "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು ರೈತ ಸ್ನೇಹಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ."
-else:
-    title = "🍄 Mushroom AI Assistant"
+selected_language = st.radio(
+    "🌐 Select Language / ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    language_options,
+    horizontal=True,
+    index=0 if st.session_state.language == "English" else 1
+)
+
+st.session_state.language = (
+    "English" if selected_language == "English" else "Kannada"
+)
+
+EN = st.session_state.language == "English"
+
+# --------------------------------------------------
+# 3. TEXT TRANSLATIONS
+# --------------------------------------------------
+
+if EN:
+    page_title = "Mushroom AI Assistant"
     subtitle = "Smart Mushroom Disease Detection & Farmer Support"
-    description = "Upload a mushroom image and receive farmer-friendly disease guidance."
+    dashboard_title = "🌿 Smart Farming Dashboard"
+    upload_title = "🔬 AI Mushroom Disease Detection"
+    upload_help = "Upload a clear mushroom image to identify its condition."
+    upload_label = "Choose a mushroom image"
+    predict_button = "🔍 Predict Mushroom Disease"
+    chatbot_title = "🤖 Farmer Assistant"
+    chatbot_help = "Ask a question about mushroom health or cultivation."
+    how_title = "🌱 How It Works"
+    footer_text = "AI Based Mushroom Disease Detection | Farmer Support System"
+    welcome = "Welcome! Upload a mushroom image to begin disease detection."
+else:
+    page_title = "ಮಶ್ರೂಮ್ AI ಸಹಾಯಕ"
+    subtitle = "ಸ್ಮಾರ್ಟ್ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ಮತ್ತು ರೈತರಿಗೆ ಸಹಾಯ"
+    dashboard_title = "🌿 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
+    upload_title = "🔬 AI ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ"
+    upload_help = "ಮಶ್ರೂಮ್ ಚಿತ್ರದ ಮೂಲಕ ಅದರ ಸ್ಥಿತಿಯನ್ನು ಗುರುತಿಸಿ."
+    upload_label = "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+    predict_button = "🔍 ಮಶ್ರೂಮ್ ರೋಗವನ್ನು ಪತ್ತೆಹಚ್ಚಿ"
+    chatbot_title = "🤖 ರೈತ ಸಹಾಯಕ"
+    chatbot_help = "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯ ಅಥವಾ ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+    how_title = "🌱 ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ"
+    footer_text = "AI ಆಧಾರಿತ ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ ವ್ಯವಸ್ಥೆ"
+    welcome = "ಸ್ವಾಗತ! ರೋಗ ಪತ್ತೆ ಮಾಡಲು ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
 
-
-# HERO SECTION
-st.success(
-    "🌱 AI ಆಧಾರಿತ ಕೃಷಿ • ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್"
-    if is_kannada else
-    "🌱 AI Powered Agriculture • Smart Farming"
-)
+# --------------------------------------------------
+# 4. HERO SECTION
+# --------------------------------------------------
 
 st.markdown(
-    f'<div class="main-title">{title}</div>',
+    f"""
+    <div class="hero">
+        <div class="small-badge">
+            🌱 AI Powered Agriculture • Smart Farming
+        </div>
+        <h1>🍄 {page_title}</h1>
+        <p>{subtitle}</p>
+        <p>
+            Identify common mushroom diseases using deep learning
+            and receive farmer-friendly guidance.
+        </p>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
+st.info(welcome)
+
+# --------------------------------------------------
+# 5. DASHBOARD
+# --------------------------------------------------
+
 st.markdown(
-    f'<div class="sub-title">{subtitle}</div>',
+    f'<div class="section-title">{dashboard_title}</div>',
     unsafe_allow_html=True
 )
 
-st.markdown(
-    f"<p style='text-align:center'>{description}</p>",
-    unsafe_allow_html=True
-)
+col1, col2, col3, col4 = st.columns(4)
 
-st.divider()
-
-
-# DASHBOARD
-st.markdown(
-    "## 🌿 ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮಿಂಗ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
-    if is_kannada else
-    "## 🌿 Smart Farming Dashboard"
-)
-
-st.write(
-    "ಮಶ್ರೂಮ್ ಕೃಷಿಗೆ ಅಗತ್ಯವಾದ ಸಹಾಯವನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ಪಡೆಯಿರಿ."
-    if is_kannada else
-    "Get smart support for mushroom farming in one place."
-)
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    st.info(
-        "### 🔬 AI ರೋಗ ಪತ್ತೆ\n\nಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
-        if is_kannada else
-        "### 🔬 AI Disease Detection\n\nUpload a mushroom image."
+with col1:
+    st.markdown(
+        """
+        <div class="info-card">
+            <h3>🔬 Disease Detection</h3>
+            <p>Identify mushroom diseases from uploaded images.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-with c2:
-    st.success(
-        "### 🌱 ರೈತ ಮಾರ್ಗದರ್ಶನ\n\nಉಪಯುಕ್ತ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ."
-        if is_kannada else
-        "### 🌱 Farmer Guidance\n\nGet useful recommendations."
+with col2:
+    st.markdown(
+        """
+        <div class="info-card">
+            <h3>🌱 Farmer Guidance</h3>
+            <p>Get basic information and suggested precautions.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-with c3:
-    st.warning(
-        "### 💬 ರೈತ ಸಹಾಯಕ\n\nನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ."
-        if is_kannada else
-        "### 💬 Farmer Assistant\n\nAsk your questions."
+with col3:
+    st.markdown(
+        """
+        <div class="info-card">
+            <h3>🌐 Two Languages</h3>
+            <p>Use the application in English or Kannada.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-with c4:
-    st.error(
-        "### 🦠 ರೋಗ ಮಾಹಿತಿ\n\nಐದು ವರ್ಗಗಳ ಮಾಹಿತಿ."
-        if is_kannada else
-        "### 🦠 Disease Information\n\nInformation about five classes."
+with col4:
+    st.markdown(
+        """
+        <div class="info-card">
+            <h3>🤖 Farmer Assistant</h3>
+            <p>Ask common questions about mushroom cultivation.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-st.divider()
+# --------------------------------------------------
+# 6. DISEASE CLASSES AND FARMER ADVICE
+# --------------------------------------------------
 
-
-# DISEASE CLASSES
 class_names = [
     "Healthy",
     "Bacterial Blotch",
     "Dry Bubble",
-    "Cobweb",
+    "Cobweb Disease",
     "Wet Bubble"
 ]
 
@@ -149,505 +257,479 @@ kannada_names = {
     "Healthy": "ಆರೋಗ್ಯಕರ",
     "Bacterial Blotch": "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್",
     "Dry Bubble": "ಡ್ರೈ ಬಬಲ್",
-    "Cobweb": "ಕಾಬ್‌ವೆಬ್",
+    "Cobweb Disease": "ಕಾಬ್‌ವೆಬ್ ರೋಗ",
     "Wet Bubble": "ವೆಟ್ ಬಬಲ್"
 }
 
-
-# FARMER ADVICE
-advice = {
-    "Healthy": {
-        "en": "The mushroom appears healthy. Maintain hygiene, suitable moisture and proper ventilation.",
-        "kn": "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯಕರವಾಗಿ ಕಾಣುತ್ತದೆ. ಸ್ವಚ್ಛತೆ, ಸೂಕ್ತ ತೇವಾಂಶ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
-    },
-    "Bacterial Blotch": {
-        "en": "Maintain hygiene, avoid excess surface moisture and improve ventilation.",
-        "kn": "ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ, ಹೆಚ್ಚುವರಿ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ ಮತ್ತು ಗಾಳಿಯ ಹರಿವನ್ನು ಸುಧಾರಿಸಿ."
-    },
-    "Dry Bubble": {
-        "en": "Remove infected mushrooms carefully and maintain growing-room hygiene.",
-        "kn": "ಸೋಂಕಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಕೊಠಡಿಯನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
-    },
-    "Cobweb": {
-        "en": "Remove affected areas, maintain cleanliness and avoid excessive humidity.",
-        "kn": "ಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು ಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
-    },
-    "Wet Bubble": {
-        "en": "Remove infected material carefully and maintain hygiene and moisture control.",
-        "kn": "ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ತೇವಾಂಶವನ್ನು ನಿಯಂತ್ರಿಸಿ."
-    }
+advice_english = {
+    "Healthy": [
+        "The mushroom is classified as healthy by the model.",
+        "Continue maintaining clean growing conditions.",
+        "Monitor the crop regularly for any unusual changes."
+    ],
+    "Bacterial Blotch": [
+        "Avoid excess moisture on mushroom caps.",
+        "Maintain suitable ventilation in the growing room.",
+        "Keep equipment and surfaces clean.",
+        "Remove affected mushrooms carefully and seek expert advice."
+    ],
+    "Dry Bubble": [
+        "Remove affected mushrooms carefully.",
+        "Clean tools and growing-room surfaces.",
+        "Avoid spreading contaminated material.",
+        "Consult a mushroom cultivation expert for treatment advice."
+    ],
+    "Cobweb Disease": [
+        "Remove affected material carefully.",
+        "Improve air circulation where appropriate.",
+        "Maintain cleanliness in the growing area.",
+        "Seek advice from an agricultural expert."
+    ],
+    "Wet Bubble": [
+        "Remove affected mushrooms and contaminated material carefully.",
+        "Clean and disinfect tools and surfaces appropriately.",
+        "Avoid moving contaminated material around the growing room.",
+        "Consult an agricultural expert for further guidance."
+    ]
 }
 
+advice_kannada = {
+    "Healthy": [
+        "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯಕರವಾಗಿದೆ ಎಂದು ಮಾದರಿ ಗುರುತಿಸಿದೆ.",
+        "ಬೆಳೆಸುವ ಸ್ಥಳವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+        "ಬೆಳೆಯನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+    ],
+    "Bacterial Blotch": [
+        "ಮಶ್ರೂಮ್ ಮೇಲ್ಭಾಗದಲ್ಲಿ ಹೆಚ್ಚಿನ ತೇವಾಂಶ ಇರದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+        "ಬೆಳೆಸುವ ಕೋಣೆಯಲ್ಲಿ ಸೂಕ್ತ ಗಾಳಿಯ ಸಂಚಾರ ಇರಲಿ.",
+        "ಉಪಕರಣಗಳು ಮತ್ತು ಮೇಲ್ಮೈಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+        "ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+    ],
+    "Dry Bubble": [
+        "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+        "ಉಪಕರಣಗಳು ಮತ್ತು ಕೋಣೆಯನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+        "ಸೋಂಕಿತ ವಸ್ತು ಹರಡದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+        "ಕೃಷಿ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+    ],
+    "Cobweb Disease": [
+        "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+        "ಸೂಕ್ತ ಗಾಳಿಯ ಸಂಚಾರವನ್ನು ಕಾಪಾಡಿ.",
+        "ಬೆಳೆಸುವ ಸ್ಥಳವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
+        "ಕೃಷಿ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+    ],
+    "Wet Bubble": [
+        "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ.",
+        "ಉಪಕರಣಗಳು ಮತ್ತು ಮೇಲ್ಮೈಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ.",
+        "ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ಬೇರೆಡೆಗೆ ಹರಡಿಸಬೇಡಿ.",
+        "ಕೃಷಿ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+    ]
+}
 
-# LOAD MODEL WHEN NEEDED
-@st.cache_resource
-def load_model():
-    return tf.keras.models.load_model(
-        "mushroom_disease_mobilenetv2.keras"
-    )
+# --------------------------------------------------
+# 7. LAZY MODEL LOADING
+# --------------------------------------------------
 
+@st.cache_resource(show_spinner=False)
+def load_mushroom_model(model_path):
+    # TensorFlow is imported only when prediction is requested.
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-# DISEASE DETECTION
-st.divider()
+    import tensorflow as tf
+
+    try:
+        tf.config.threading.set_intra_op_parallelism_threads(2)
+        tf.config.threading.set_inter_op_parallelism_threads(2)
+    except Exception:
+        pass
+
+    model = tf.keras.models.load_model(model_path, compile=False)
+    return model
+
+# --------------------------------------------------
+# 8. IMAGE UPLOAD AND PREDICTION
+# --------------------------------------------------
 
 st.markdown(
-    "## 🔬 ಮಶ್ರೂಮ್ ರೋಗ ಪತ್ತೆ"
-    if is_kannada else
-    "## 🔬 Mushroom Disease Detection"
+    f'<div class="section-title">{upload_title}</div>',
+    unsafe_allow_html=True
 )
 
-st.write(
-    "ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
-    if is_kannada else
-    "Upload a clear mushroom image for disease detection."
+st.write(upload_help)
+
+uploaded_file = st.file_uploader(
+    upload_label,
+    type=["jpg", "jpeg", "png"],
+    key="mushroom_image"
 )
-
-upload_col, help_col = st.columns(2)
-
-with upload_col:
-    uploaded_file = st.file_uploader(
-        "ಚಿತ್ರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ / Choose an image",
-        type=["jpg", "jpeg", "png"]
-    )
-
-with help_col:
-    st.info(
-        "ಉತ್ತಮ ಬೆಳಕು ಬಳಸಿ. ಮಶ್ರೂಮ್ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಲಿ."
-        if is_kannada else
-        "Use good lighting and keep the mushroom clearly visible."
-    )
 
 if uploaded_file is not None:
 
     try:
-        image = Image.open(uploaded_file).convert("RGB")
+        image = Image.open(uploaded_file)
+        image = ImageOps.exif_transpose(image).convert("RGB")
 
-        image_col, result_col = st.columns(2)
+        left, right = st.columns(2)
 
-        with image_col:
-            st.subheader(
-                "ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರ"
-                if is_kannada else
-                "Uploaded Image"
-            )
-            st.image(image, use_container_width=True)
-
-        with st.spinner(
-            "ಮಾದರಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ..."
-            if is_kannada else
-            "Loading model and analyzing image..."
-        ):
-
-            model = load_model()
-
-            resized_image = image.resize((224, 224))
-
-            image_array = np.asarray(
-                resized_image,
-                dtype=np.float32
-            ) / 255.0
-
-            image_array = np.expand_dims(
-                image_array,
-                axis=0
+        with left:
+            st.image(
+                image,
+                caption="Uploaded Mushroom Image",
+                use_container_width=True
             )
 
-            prediction = model.predict(
-                image_array,
-                verbose=0
-            )
+        with right:
+            st.write("### Image Information")
+            st.write("Image format:", uploaded_file.type)
+            st.write("Image size:", image.size)
 
-        predicted_index = int(
-            np.argmax(prediction[0])
-        )
+        if st.button(predict_button, type="primary"):
 
-        predicted_class = class_names[predicted_index]
+            if not MODEL_PATH.exists():
+                st.error(
+                    "Model file not found. Please check that "
+                    "mushroom_disease_mobilenetv2.keras is in your GitHub repository."
+                )
 
-        confidence = float(
-            prediction[0][predicted_index]
-        ) * 100
-
-        display_name = (
-            kannada_names[predicted_class]
-            if is_kannada
-            else predicted_class
-        )
-
-        with result_col:
-
-            st.subheader(
-                "ಪತ್ತೆಯಾದ ಫಲಿತಾಂಶ"
-                if is_kannada else
-                "Detection Result"
-            )
-
-            if predicted_class == "Healthy":
-                st.success(f"🟢 {display_name}")
             else:
-                st.error(f"🔴 {display_name}")
+                try:
+                    with st.spinner(
+                        "Loading the AI model and analysing the image..."
+                    ):
+                        model = load_mushroom_model(str(MODEL_PATH))
 
-            st.write(
-                "ವಿಶ್ವಾಸ ಮಟ್ಟ"
-                if is_kannada else
-                "Prediction Confidence"
-            )
+                        resized_image = image.resize((224, 224))
 
-            st.progress(
-                min(max(confidence / 100, 0.0), 1.0)
-            )
+                        image_array = np.array(
+                            resized_image,
+                            dtype=np.float32
+                        )
 
-            st.metric(
-                "Confidence",
-                f"{confidence:.2f}%"
-            )
+                        image_array = image_array / 255.0
+                        image_array = np.expand_dims(image_array, axis=0)
 
-        advice_text = advice[predicted_class][
-            "kn" if is_kannada else "en"
-        ]
+                        predictions = model.predict(
+                            image_array,
+                            verbose=0
+                        )
 
-        st.info(
-            f"🌱 **ರೈತರಿಗೆ ಸಲಹೆ**\n\n{advice_text}"
-            if is_kannada else
-            f"🌱 **Farmer Advice**\n\n{advice_text}"
-        )
+                        predicted_index = int(
+                            np.argmax(predictions[0])
+                        )
 
-    except Exception as error:
+                        confidence = float(
+                            predictions[0][predicted_index]
+                        ) * 100
+
+                        predicted_class = class_names[predicted_index]
+
+                    st.success("Prediction completed successfully!")
+
+                    st.markdown("### 🍄 Prediction Result")
+
+                    if EN:
+                        st.subheader(
+                            f"Detected Category: {predicted_class}"
+                        )
+                    else:
+                        st.subheader(
+                            f"ಪತ್ತೆಯಾದ ವರ್ಗ: "
+                            f"{kannada_names[predicted_class]}"
+                        )
+
+                    st.metric(
+                        "Model Confidence" if EN else "ಮಾದರಿಯ ವಿಶ್ವಾಸ ಮಟ್ಟ",
+                        f"{confidence:.2f}%"
+                    )
+
+                    st.progress(
+                        min(max(confidence / 100, 0.0), 1.0)
+                    )
+
+                    st.markdown("### 🌱 Farmer Advice")
+
+                    advice_list = (
+                        advice_english[predicted_class]
+                        if EN
+                        else advice_kannada[predicted_class]
+                    )
+
+                    st.markdown(
+                        '<div class="advice-card">',
+                        unsafe_allow_html=True
+                    )
+
+                    for advice in advice_list:
+                        st.write("• " + advice)
+
+                    st.markdown("</div>", unsafe_allow_html=True)
+
+                    st.caption(
+                        "This is an AI prediction, not a laboratory diagnosis. "
+                        "Consult an agricultural expert before taking treatment decisions."
+                        if EN else
+                        "ಇದು AI ಆಧಾರಿತ ಅಂದಾಜು ಮಾತ್ರ. ಚಿಕಿತ್ಸಾ ನಿರ್ಧಾರಕ್ಕೆ ಮೊದಲು ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+                    )
+
+                except Exception as error:
+                    st.error(
+                        "Prediction failed. Please check the model file "
+                        "and application logs."
+                    )
+                    st.exception(error)
+
+    except Exception:
         st.error(
-            "ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
-            if is_kannada else
-            "Image analysis failed."
+            "Unable to read this image. Please upload a valid JPG or PNG image."
         )
-        st.exception(error)
 
-
-# GENERAL FARMER GUIDANCE
-st.divider()
-
-st.markdown(
-    "## 🌱 ರೈತರಿಗೆ ಉಪಯುಕ್ತ ಸಲಹೆಗಳು"
-    if is_kannada else
-    "## 🌱 Useful Farmer Advice"
-)
-
-a1, a2 = st.columns(2)
-
-with a1:
-    st.info(
-        "### 🧼 ಸ್ವಚ್ಛತೆ\n\nಬೆಳೆಯುವ ಕೊಠಡಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
-        if is_kannada else
-        "### 🧼 Hygiene\n\nKeep the growing room and tools clean."
-    )
-
-    st.success(
-        "### 🌬️ ಗಾಳಿಯ ಹರಿವು\n\nಉತ್ತಮ ಗಾಳಿಯ ಸಂಚಾರ ಇರಲಿ."
-        if is_kannada else
-        "### 🌬️ Ventilation\n\nMaintain good air circulation."
-    )
-
-with a2:
-    st.warning(
-        "### 💧 ತೇವಾಂಶ ನಿಯಂತ್ರಣ\n\nಅತಿಯಾದ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
-        if is_kannada else
-        "### 💧 Moisture Control\n\nAvoid excessive surface moisture."
-    )
-
-    st.info(
-        "### 👀 ಪರಿಶೀಲನೆ\n\nಮಶ್ರೂಮ್‌ಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
-        if is_kannada else
-        "### 👀 Regular Inspection\n\nInspect mushrooms regularly."
-    )
-
-
-# SUPPORTED DISEASES
-st.divider()
+# --------------------------------------------------
+# 9. SUPPORTED DISEASES
+# --------------------------------------------------
 
 st.markdown(
-    "## 🦠 ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ರೋಗಗಳು"
-    if is_kannada else
-    "## 🦠 Supported Diseases"
+    '<div class="section-title">🍄 Supported Mushroom Categories</div>',
+    unsafe_allow_html=True
 )
-
-icons = ["🍄", "🦠", "⚪", "🕸️", "💧"]
 
 disease_columns = st.columns(5)
 
-for column, disease, icon in zip(
-    disease_columns,
-    class_names,
-    icons
-):
-    with column:
-        name = (
-            kannada_names[disease]
-            if is_kannada
-            else disease
+for index, disease in enumerate(class_names):
+    with disease_columns[index]:
+        display_name = (
+            disease if EN else kannada_names[disease]
         )
-        st.info(f"{icon} **{name}**")
+        st.markdown(
+            f"""
+            <div class="info-card">
+                <h3>{index + 1}. {display_name}</h3>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-
-# HOW IT WORKS
-st.divider()
+# --------------------------------------------------
+# 10. HOW IT WORKS
+# --------------------------------------------------
 
 st.markdown(
-    "## ⚙️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?"
-    if is_kannada else
-    "## ⚙️ How It Works"
+    f'<div class="section-title">{how_title}</div>',
+    unsafe_allow_html=True
 )
 
-h1, h2, h3 = st.columns(3)
+step1, step2, step3, step4 = st.columns(4)
 
-with h1:
-    st.info(
-        "### 1️⃣ ಚಿತ್ರ ಅಪ್‌ಲೋಡ್\n\nಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ."
-        if is_kannada else
-        "### 1️⃣ Upload Image\n\nChoose a mushroom photo."
-    )
+if EN:
+    steps = [
+        ("📷 Step 1", "Upload a mushroom image."),
+        ("🖼️ Step 2", "Image is resized to 224 × 224 pixels."),
+        ("🧠 Step 3", "MobileNetV2 analyses image features."),
+        ("📊 Step 4", "The predicted category is displayed.")
+    ]
+else:
+    steps = [
+        ("📷 ಹಂತ 1", "ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."),
+        ("🖼️ ಹಂತ 2", "ಚಿತ್ರವನ್ನು 224 × 224 ಗಾತ್ರಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗುತ್ತದೆ."),
+        ("🧠 ಹಂತ 3", "MobileNetV2 ಚಿತ್ರದ ಲಕ್ಷಣಗಳನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ."),
+        ("📊 ಹಂತ 4", "ರೋಗದ ವರ್ಗವನ್ನು ತೋರಿಸಲಾಗುತ್ತದೆ.")
+    ]
 
-with h2:
-    st.warning(
-        "### 2️⃣ AI ವಿಶ್ಲೇಷಣೆ\n\nMobileNetV2 ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತದೆ."
-        if is_kannada else
-        "### 2️⃣ AI Analysis\n\nMobileNetV2 analyzes the image."
-    )
+for column, step in zip([step1, step2, step3, step4], steps):
+    with column:
+        st.markdown(
+            f"""
+            <div class="info-card">
+                <h3>{step[0]}</h3>
+                <p>{step[1]}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-with h3:
-    st.success(
-        "### 3️⃣ ರೈತ ಮಾರ್ಗದರ್ಶನ\n\nಫಲಿತಾಂಶ ಮತ್ತು ಸಲಹೆ ಪಡೆಯಿರಿ."
-        if is_kannada else
-        "### 3️⃣ Farmer Guidance\n\nView the result and advice."
-    )
+# --------------------------------------------------
+# 11. RULE-BASED FARMER ASSISTANT
+# --------------------------------------------------
 
+st.markdown(
+    f'<div class="section-title">{chatbot_title}</div>',
+    unsafe_allow_html=True
+)
 
-# CHATBOT FUNCTION
-def get_chatbot_response(question, kannada):
+st.write(chatbot_help)
 
+def farmer_answer(question, english=True):
     q = question.lower()
 
-    if kannada:
+    if any(word in q for word in ["hello", "hi", "ನಮಸ್ಕಾರ"]):
+        return (
+            "Hello! How can I help you with mushroom cultivation?"
+            if english else
+            "ನಮಸ್ಕಾರ! ಮಶ್ರೂಮ್ ಕೃಷಿಯಲ್ಲಿ ನಾನು ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?"
+        )
 
-        if "ಬ್ಯಾಕ್ಟೀರಿಯಲ್" in q or "blotch" in q:
-            return "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್: ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು ಹೆಚ್ಚುವರಿ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
+    if any(word in q for word in ["healthy", "ಆರೋಗ್ಯ"]):
+        return (
+            "Healthy mushrooms should be grown in clean conditions. "
+            "Monitor them regularly."
+            if english else
+            "ಆರೋಗ್ಯಕರ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಸ್ವಚ್ಛ ಪರಿಸರದಲ್ಲಿ ಬೆಳೆಸಿ. ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ."
+        )
 
-        if "ಡ್ರೈ ಬಬಲ್" in q or "dry bubble" in q:
-            return "ಡ್ರೈ ಬಬಲ್: ಸೋಂಕಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ."
+    if any(word in q for word in ["blotch", "ಬ್ಲಾಚ್"]):
+        return (
+            "For bacterial blotch, avoid excess moisture, maintain ventilation "
+            "and clean the growing area."
+            if english else
+            "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಸಮಸ್ಯೆಗೆ ಹೆಚ್ಚಿನ ತೇವಾಂಶ ತಪ್ಪಿಸಿ ಮತ್ತು ಸ್ಥಳವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ."
+        )
 
-        if "ಕಾಬ್" in q or "cobweb" in q:
-            return "ಕಾಬ್‌ವೆಬ್: ಬಾಧಿತ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಸ್ವಚ್ಛತೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+    if any(word in q for word in ["dry bubble", "ಡ್ರೈ ಬಬಲ್"]):
+        return (
+            "Remove affected mushrooms carefully, clean tools and consult "
+            "a mushroom cultivation expert."
+            if english else
+            "ಬಾಧಿತ ಮಶ್ರೂಮ್‌ಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ, ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
+        )
 
-        if "ವೆಟ್ ಬಬಲ್" in q or "wet bubble" in q:
-            return "ವೆಟ್ ಬಬಲ್: ಸೋಂಕಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಮತ್ತು ತೇವಾಂಶವನ್ನು ನಿಯಂತ್ರಿಸಿ."
+    if any(word in q for word in ["cobweb", "ಕಾಬ್"]):
+        return (
+            "Remove affected material carefully, maintain cleanliness "
+            "and seek expert advice."
+            if english else
+            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, ಸ್ವಚ್ಛತೆ ಕಾಪಾಡಿ ಮತ್ತು ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಿರಿ."
+        )
 
-        if "ತಡೆ" in q or "prevent" in q:
-            return "ರೋಗ ತಡೆಗಟ್ಟಲು ಸ್ವಚ್ಛತೆ, ಗಾಳಿಯ ಹರಿವು ಮತ್ತು ಸೂಕ್ತ ತೇವಾಂಶವನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ."
+    if any(word in q for word in ["wet bubble", "ವೆಟ್ ಬಬಲ್"]):
+        return (
+            "Remove affected material carefully and disinfect tools and surfaces "
+            "appropriately. Consult an expert."
+            if english else
+            "ಬಾಧಿತ ವಸ್ತುಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದುಹಾಕಿ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ."
+        )
 
-        if "ತೇವಾಂಶ" in q or "moisture" in q:
-            return "ಅತಿಯಾದ ಮೇಲ್ಮೈ ತೇವಾಂಶವನ್ನು ತಪ್ಪಿಸಿ."
+    if any(word in q for word in ["water", "moisture", "ತೇವಾಂಶ", "ನೀರು"]):
+        return (
+            "Maintain suitable humidity and avoid excess water on mushroom caps. "
+            "Follow the recommended conditions for your mushroom variety."
+            if english else
+            "ಸೂಕ್ತ ತೇವಾಂಶ ಕಾಪಾಡಿ. ಮಶ್ರೂಮ್ ಮೇಲ್ಭಾಗದಲ್ಲಿ ಹೆಚ್ಚಿನ ನೀರು ಇರದಂತೆ ನೋಡಿಕೊಳ್ಳಿ."
+        )
 
-        if "ಗಾಳಿ" in q or "ventilation" in q:
-            return "ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಬೆಳೆಯುವ ಪರಿಸರಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+    if any(word in q for word in ["temperature", "ತಾಪಮಾನ"]):
+        return (
+            "The suitable temperature depends on the mushroom variety and "
+            "growing stage. Follow a reliable cultivation guide."
+            if english else
+            "ಸೂಕ್ತ ತಾಪಮಾನವು ಮಶ್ರೂಮ್ ತಳಿ ಮತ್ತು ಬೆಳವಣಿಗೆಯ ಹಂತವನ್ನು ಅವಲಂಬಿಸಿರುತ್ತದೆ."
+        )
 
-        return "ದಯವಿಟ್ಟು ಮಶ್ರೂಮ್ ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ, ತೇವಾಂಶ ಅಥವಾ ಗಾಳಿಯ ಹರಿವಿನ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
+    if any(word in q for word in ["disease", "ರೋಗ"]):
+        return (
+            "Upload a clear mushroom image in the Disease Detection section. "
+            "The model can classify five categories."
+            if english else
+            "ರೋಗ ಪತ್ತೆ ವಿಭಾಗದಲ್ಲಿ ಸ್ಪಷ್ಟವಾದ ಮಶ್ರೂಮ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
+        )
 
-    else:
-
-        if "bacterial" in q or "blotch" in q:
-            return "Bacterial Blotch: Maintain hygiene and avoid excess surface moisture."
-
-        if "dry bubble" in q:
-            return "Dry Bubble: Carefully remove affected mushrooms and maintain cleanliness."
-
-        if "cobweb" in q:
-            return "Cobweb: Remove affected areas and avoid excessive humidity."
-
-        if "wet bubble" in q:
-            return "Wet Bubble: Remove infected material carefully and maintain hygiene."
-
-        if "prevent" in q:
-            return "Disease prevention: Maintain hygiene, suitable moisture and good ventilation."
-
-        if "hygiene" in q or "clean" in q:
-            return "Keep the growing room and tools clean."
-
-        if "moisture" in q:
-            return "Avoid excessive surface moisture."
-
-        if "ventilation" in q or "air" in q:
-            return "Good air circulation helps maintain a suitable growing environment."
-
-        return "Ask me about mushroom diseases, hygiene, moisture, ventilation or disease prevention."
-
-
-# FARMER ASSISTANT
-st.divider()
-
-st.markdown(
-    "## 💬 AI ರೈತ ಸಹಾಯಕ"
-    if is_kannada else
-    "## 💬 AI Farmer Assistant"
-)
-
-st.write(
-    "ಮಶ್ರೂಮ್ ರೋಗಗಳ ಬಗ್ಗೆ ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ."
-    if is_kannada else
-    "Ask questions about mushroom diseases and prevention."
-)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-
-# VOICE ASSISTANT
-st.markdown(
-    "### 🎙️ ಧ್ವನಿ ರೈತ ಸಹಾಯಕ"
-    if is_kannada else
-    "### 🎙️ Voice Farmer Assistant"
-)
-
-voice_question = None
-
-if speech_to_text is not None:
-
-    voice_question = speech_to_text(
-        language="kn-IN" if is_kannada else "en-US",
-        start_prompt="🎙️ ಪ್ರಶ್ನೆ ಕೇಳಿ" if is_kannada else "🎙️ Ask by Voice",
-        stop_prompt="⏹️ ನಿಲ್ಲಿಸಿ" if is_kannada else "⏹️ Stop",
-        just_once=True,
-        use_container_width=True,
-        key="voice_kn" if is_kannada else "voice_en"
+    return (
+        "I can provide basic guidance about mushroom health, diseases, "
+        "cleanliness and cultivation. Please ask a specific question."
+        if english else
+        "ಮಶ್ರೂಮ್ ಆರೋಗ್ಯ, ರೋಗಗಳು, ಸ್ವಚ್ಛತೆ ಮತ್ತು ಕೃಷಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ."
     )
 
-else:
-    st.caption(
-        "Voice input is unavailable. Check requirements.txt."
-    )
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-
-# QUICK QUESTIONS
-quick_questions = (
-    [
-        "ಬ್ಯಾಕ್ಟೀರಿಯಲ್ ಬ್ಲಾಚ್ ಎಂದರೇನು?",
-        "ಡ್ರೈ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
-        "ಕಾಬ್‌ವೆಬ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
-        "ವೆಟ್ ಬಬಲ್ ಬಗ್ಗೆ ತಿಳಿಸಿ",
-        "ರೋಗಗಳನ್ನು ಹೇಗೆ ತಡೆಯುವುದು?"
-    ]
-    if is_kannada else
-    [
-        "What is Bacterial Blotch?",
-        "Tell me about Dry Bubble",
-        "Tell me about Cobweb",
-        "Tell me about Wet Bubble",
-        "How can I prevent diseases?"
-    ]
-)
-
-st.markdown(
-    "### ⚡ ತ್ವರಿತ ಪ್ರಶ್ನೆಗಳು"
-    if is_kannada else
-    "### ⚡ Quick Questions"
-)
-
-quick_columns = st.columns(3)
-selected_question = None
-
-for index, question in enumerate(quick_questions):
-
-    with quick_columns[index % 3]:
-
-        if st.button(
-            question,
-            use_container_width=True,
-            key=f"quick_{index}"
-        ):
-            selected_question = question
-
-
-# CHAT HISTORY
-for message in st.session_state.messages:
-
+for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        st.write(message["content"])
 
-
-typed_question = st.chat_input(
-    "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
-    if is_kannada else
-    "Ask your question..."
-)
-
-user_question = (
-    typed_question
-    or selected_question
-    or voice_question
+user_question = st.chat_input(
+    "Ask your mushroom farming question..."
+    if EN else
+    "ಮಶ್ರೂಮ್ ಕೃಷಿಯ ಬಗ್ಗೆ ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ..."
 )
 
 if user_question:
-
-    st.session_state.messages.append({
-        "role": "user",
-        "content": user_question
-    })
-
-    response = get_chatbot_response(
-        user_question,
-        is_kannada
+    st.session_state.chat_history.append(
+        {"role": "user", "content": user_question}
     )
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": response
-    })
+    answer = farmer_answer(user_question, EN)
 
-    # VOICE RESPONSE
-    if (
-        voice_question
-        and user_question == voice_question
-        and gTTS is not None
-    ):
-
-        try:
-            audio_buffer = BytesIO()
-
-            gTTS(
-                text=response,
-                lang="kn" if is_kannada else "en"
-            ).write_to_fp(audio_buffer)
-
-            st.audio(
-                audio_buffer.getvalue(),
-                format="audio/mp3"
-            )
-
-        except Exception:
-            st.info("Text response is available.")
+    st.session_state.chat_history.append(
+        {"role": "assistant", "content": answer}
+    )
 
     st.rerun()
 
+# --------------------------------------------------
+# 12. OPTIONAL VOICE ASSISTANT
+# --------------------------------------------------
 
-# CLEAR CHAT
-if st.session_state.messages:
+st.markdown("### 🎤 Voice Farmer Assistant")
 
-    if st.button(
-        "🗑️ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ"
-        if is_kannada else
-        "🗑️ Clear Chat"
-    ):
+try:
+    from streamlit_mic_recorder import speech_to_text
+    from gtts import gTTS
+    from io import BytesIO
 
-        st.session_state.messages = []
-        st.rerun()
+    voice_language = "en" if EN else "kn"
 
+    spoken_question = speech_to_text(
+        language="en-US" if EN else "kn-IN",
+        just_once=True,
+        key="voice_input"
+    )
 
-# DISCLAIMER
-st.divider()
+    if spoken_question:
+        st.write("You said:", spoken_question)
 
-st.warning(
-    "AI ಫಲಿತಾಂಶವು ಪ್ರಾಥಮಿಕ ಮಾರ್ಗದರ್ಶನಕ್ಕಾಗಿ ಮಾತ್ರ. ಗಂಭೀರ ಸಮಸ್ಯೆಗಳಿದ್ದರೆ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ."
-    if is_kannada else
-    "AI results are for preliminary guidance only. For serious problems, consult an agricultural expert."
-)
+        spoken_answer = farmer_answer(spoken_question, EN)
 
-st.divider()
+        st.write("Assistant:", spoken_answer)
 
-st.caption(
-    "🍄 Mushroom AI Assistant | AI Based Mushroom Disease Detection Using Image Processing & Deep Learning"
+        audio_buffer = BytesIO()
+
+        tts = gTTS(
+            text=spoken_answer,
+            lang=voice_language
+        )
+
+        tts.write_to_fp(audio_buffer)
+        audio_buffer.seek(0)
+
+        st.audio(
+            audio_buffer,
+            format="audio/mp3"
+        )
+
+except ImportError:
+    st.info(
+        "Voice assistant packages are not installed. "
+        "You can still use the text Farmer Assistant."
+    )
+
+except Exception:
+    st.info(
+        "Voice input is not available in this browser. "
+        "Please use the text Farmer Assistant."
+    )
+
+# --------------------------------------------------
+# 13. FOOTER
+# --------------------------------------------------
+
+st.markdown("---")
+
+st.markdown(
+    f"""
+    <footer>
+        <h4>🍄 Mushroom AI Assistant</h4>
+        <p>{footer_text}</p>
+        <p>Developed using Python, TensorFlow, MobileNetV2 and Streamlit.</p>
+    </footer>
+    """,
+    unsafe_allow_html=True
 )
